@@ -1,0 +1,2 @@
+# RemodelHelper
+KanColleViewer改修工厂辅助插件
