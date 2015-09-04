@@ -85,7 +85,7 @@ namespace RemodelHelper.Models
             return await Task.Run(() =>
             {
                 // 等待Master初始化完成
-                while (Master == null) { }
+                WaitForMaster();
 
                 return available.Select(slotGroup => new ItemViewModel
                 {
@@ -115,7 +115,7 @@ namespace RemodelHelper.Models
             {
                 await Task.Run(() =>
                 {
-                    while (Master == null) { }
+                    WaitForMaster();
                     using (var client = new WebClient())
                     using (var stream = client.OpenRead(url))
                         if (stream != null)
@@ -135,6 +135,11 @@ namespace RemodelHelper.Models
                 );
             }
             catch { }
+        }
+
+        private static void WaitForMaster()
+        {
+            while (Master == null) Thread.Sleep(100);
         }
 
         private static class VersionComparer
