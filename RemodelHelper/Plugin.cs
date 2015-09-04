@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using Grabacr07.KanColleViewer.Composition;
 using Livet;
+using RemodelHelper.Models;
 using RemodelHelper.ViewModels;
 using RemodelHelper.Views;
 
@@ -24,7 +25,7 @@ namespace RemodelHelper
 
         public void Initialize()
         {
-
+            RemodelData.Current.UpdateFromInternet();
         }
     }
 }

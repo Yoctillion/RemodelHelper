@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models;
@@ -104,6 +106,56 @@ namespace RemodelHelper.Models
 
                 }).ToArray();
             });
+        }
+
+        public async void UpdateFromInternet()
+        {
+            const string url = @"https://raw.githubusercontent.com/Yoctillion/RemodelHelper/master/Data/RemodelData.json";
+            try
+            {
+                await Task.Run(() =>
+                {
+                    while (Master == null) { }
+                    using (var client = new WebClient())
+                    using (var stream = client.OpenRead(url))
+                        if (stream != null)
+                        {
+                            var check = _serializer.ReadObject(stream) as RemodelData;
+
+                            if (check == null) return;
+
+                            if (VersionComparer.Compare(this.Version, check.Version) < 0)
+                            {
+                                this.Version = check.Version;
+                                this.Items = check.Items;
+                                this.Save();
+                            }
+                        }
+                }
+                );
+            }
+            catch { }
+        }
+
+        private static class VersionComparer
+        {
+            public static int Compare(string x, string y)
+            {
+                if (string.IsNullOrEmpty(y)) return 1;
+                if (string.IsNullOrEmpty(x)) return -1;
+
+                var vx = x.Split('.');
+                var vy = y.Split('.');
+
+                for (var i = 0; i < 3; i++)
+                {
+                    var vxi = int.Parse(vx[i]);
+                    var vyi = int.Parse(vy[i]);
+                    if (vxi < vyi) return -1;
+                    if (vxi > vyi) return 1;
+                }
+                return 0;
+            }
         }
     }
 }
