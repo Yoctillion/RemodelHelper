@@ -17,8 +17,6 @@ namespace RemodelHelper.Models
     [DataContract]
     public class RemodelData : NotificationObject
     {
-        private static Master Master => KanColleClient.Current.Master;
-
         private string DataPath { get; } = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "grabacr.net",
@@ -77,37 +75,6 @@ namespace RemodelHelper.Models
             }
         }
 
-        internal async Task<ItemViewModel[]> GetRemodelInfo(DayOfWeek day)
-        {
-            var available = this.Items.Where(item => item.Week.HasFlag(day.Convert()))
-                .GroupBy(item => item.SlotId).ToArray();
-
-            return await Task.Run(() =>
-            {
-                // 等待Master初始化完成
-                WaitForMaster();
-
-                return available.Select(slotGroup => new ItemViewModel
-                {
-                    Slot = new SlotViewModel
-                    {
-                        Name = Master.SlotItems[slotGroup.Key]?.Name ?? "未知",
-                        Type = Master.SlotItems[slotGroup.Key]?.IconType ?? SlotItemIconType.Unknown,
-                    },
-
-                    NewSlot = slotGroup.GroupBy(slot => slot.NewId).Select(newSlots => new NewSlotViewModel
-                    {
-                        Name = Master.SlotItems[newSlots.Key]?.Name ?? "更新不可",
-                        Type = Master.SlotItems[newSlots.Key]?.IconType ?? SlotItemIconType.Unknown,
-
-                        Ships = newSlots.Select(item => new ShipViewModel { Name = Master.Ships[item.ShipId]?.Name ?? "" })
-                                .ToArray(),
-                    }).ToArray(),
-
-                }).ToArray();
-            });
-        }
-
         public async void UpdateFromInternet()
         {
             const string url = @"https://raw.githubusercontent.com/Yoctillion/RemodelHelper/master/Data/RemodelData.json";
@@ -115,7 +82,6 @@ namespace RemodelHelper.Models
             {
                 await Task.Run(() =>
                 {
-                    WaitForMaster();
                     using (var client = new WebClient())
                     using (var stream = client.OpenRead(url))
                         if (stream != null)
@@ -135,11 +101,6 @@ namespace RemodelHelper.Models
                 );
             }
             catch { }
-        }
-
-        private static void WaitForMaster()
-        {
-            while (Master == null) Thread.Sleep(100);
         }
 
         private static class VersionComparer

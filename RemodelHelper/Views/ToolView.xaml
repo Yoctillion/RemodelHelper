@@ -26,36 +26,52 @@
     </UserControl.Resources>
 
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-
-
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
             <TextBlock Text="日期"
                        Style="{DynamicResource DefaultTextStyleKey}"
-                       Margin="10,0" />
+                       VerticalAlignment="Center"
+                       Margin="2" />
 
-            <metro:PromptComboBox Grid.Column="1"
-                                  ItemsSource="{Binding DaysOfWeek}"
+            <metro:PromptComboBox ItemsSource="{Binding DaysOfWeek}"
                                   SelectedIndex="{Binding CurrentDay, Converter={StaticResource DayOfWeekAndIntConverter}, Mode=TwoWay}"
+                                  Width="50"
+                                  VerticalAlignment="Center"
                                   Margin="2" />
-        </Grid>
-        <Border Grid.Row="1"
-                BorderBrush="{DynamicResource BorderBrushKey}"
+
+            <Border Width="1"
+                    Background="{DynamicResource ActiveBorderBrushKey}"
+                    Margin="5,3" />
+
+            <CheckBox Content="全选"
+                      IsChecked="{Binding IsAllTypeSelected}"
+                      Margin="2,2,10,2"
+                      VerticalAlignment="Top" />
+
+            <ItemsControl ItemsSource="{Binding SlotTypes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                  Margin="0,2,10,2">
+                            <TextBlock Text="{Binding Name}" />
+                        </CheckBox>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
+
+        <Border BorderBrush="{DynamicResource BorderBrushKey}"
                 BorderThickness="0">
             <ListView ItemsSource="{Binding Items}"
                       ItemContainerStyle="{DynamicResource GridViewItemContainerStyleKey}"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.PanningMode="Both">
                 <ListView.Resources>
                     <Style TargetType="{x:Type TextBlock}"
                            BasedOn="{StaticResource DefaultTextStyleKey}">
@@ -114,7 +130,7 @@
                                                 <controls:SlotItemIcon Type="{Binding Slot.Type}" />
                                             </Viewbox>
                                         </Border>
-                                        <TextBlock Text="{Binding Slot.Name}"
+                                        <TextBlock Text="{Binding Slot.Name, Mode=OneWay}"
                                                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
                                                    Margin="0,4" />
                                     </StackPanel>
@@ -154,7 +170,7 @@
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Margin="0,4,18,0"
-                                                                               Text="{Binding Name}"
+                                                                               Text="{Binding Name, Mode=OneWay}"
                                                                                Foreground="{DynamicResource ActiveForegroundBrushKey}" />
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
@@ -165,7 +181,7 @@
                                                                 <controls:SlotItemIcon Type="{Binding Type}" />
                                                             </Viewbox>
                                                         </Border>
-                                                        <TextBlock Text="{Binding Name}"
+                                                        <TextBlock Text="{Binding Name, Mode=OneWay}"
                                                                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
                                                                    Margin="0,4" />
                                                     </DockPanel>
@@ -181,5 +197,5 @@
 
             </ListView>
         </Border>
-    </Grid>
+    </DockPanel>
 </UserControl>

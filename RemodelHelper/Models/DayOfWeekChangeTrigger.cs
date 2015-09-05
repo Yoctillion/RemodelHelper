@@ -5,8 +5,10 @@ namespace RemodelHelper.Models
 {
     public delegate void DateChangeEvent(DayOfWeek before, DayOfWeek after);
 
-    public class DayOfWeekChangeTrigger
+    public class DayOfWeekChangeTrigger : IDisposable
     {
+        private readonly DispatcherTimer _timer;
+
         private DayOfWeek _today;
 
         public DayOfWeek Today
@@ -32,15 +34,22 @@ namespace RemodelHelper.Models
         public event DateChangeEvent DateChanged;
 
         public bool IsEnabled { get; set; }
-
+        
         public DayOfWeekChangeTrigger(TimeSpan timeSpan = default(TimeSpan), int utcOffset = 0)
         {
             if (timeSpan == default(TimeSpan)) timeSpan = TimeSpan.FromSeconds(1);
             this._utcOffset = utcOffset;
 
-            var timer = new DispatcherTimer { Interval = timeSpan };
-            timer.Tick += (x, y) => this.Today = this.CurrentDayOfWeek;
-            timer.IsEnabled = true;
+            this.Today = this.CurrentDayOfWeek;
+
+            this._timer = new DispatcherTimer { Interval = timeSpan };
+            this._timer.Tick += (x, y) => this.Today = this.CurrentDayOfWeek;
+            this._timer.IsEnabled = true;
+        }
+
+        public void Dispose()
+        {
+            _timer.IsEnabled = false;
         }
     }
 }
