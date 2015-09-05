@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Livet;
 using Livet.Messaging;
@@ -49,8 +50,9 @@ namespace RemodelHelper.ViewModels
         public ToolViewModel()
         {
             DaysOfWeek = new[] { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
-            this.CurrentDay = DateTime.Now.DayOfWeek;
+            this.CurrentDay = GetJstNow().DayOfWeek;
             RemodelData.Current.PropertyChanged += DataUpdated;
+            Task.Run(() => this.UpdateDate());
         }
 
         private void DataUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) => Update();
@@ -59,5 +61,26 @@ namespace RemodelHelper.ViewModels
         {
             this.Items = await RemodelData.Current.GetRemodelInfo(this.CurrentDay);
         }
+
+        private void UpdateDate()
+        {
+            var day = GetJstNow().DayOfWeek;
+            while (true)
+            {
+                var current = GetJstNow().DayOfWeek;
+                // 日期更新
+                if (day != current)
+                {
+                    if (this.CurrentDay == day)
+                        this.CurrentDay = current;
+
+                    day = current;
+                }
+                // 每分钟检查一次
+                Thread.Sleep(60000);
+            }
+        }
+
+        private static DateTime GetJstNow() => DateTime.UtcNow.AddHours(9);
     }
 }
