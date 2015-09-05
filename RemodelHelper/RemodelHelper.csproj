@@ -159,6 +159,7 @@
   <ItemGroup>
     <Compile Include="Converters\DayOfWeekAndIntConverter.cs" />
     <Compile Include="Converters\SlotNameToVisibilityConverter.cs" />
+    <Compile Include="Models\DayOfWeekChangeTrigger.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\RemodelData.cs" />
     <Compile Include="Models\Week.cs" />

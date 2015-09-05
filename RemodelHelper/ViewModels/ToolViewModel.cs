@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Livet;
-using Livet.Messaging;
 using RemodelHelper.Models;
-using RemodelHelper.Views;
 
 namespace RemodelHelper.ViewModels
 {
@@ -50,9 +44,12 @@ namespace RemodelHelper.ViewModels
         public ToolViewModel()
         {
             DaysOfWeek = new[] { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
-            this.CurrentDay = GetJstNow().DayOfWeek;
+
             RemodelData.Current.PropertyChanged += DataUpdated;
-            Task.Run(() => this.UpdateDate());
+
+            var dayTrigger = new DayOfWeekChangeTrigger(TimeSpan.FromMinutes(1), 9) { IsEnabled = true };
+            dayTrigger.DateChanged += this.UpdateDate;
+            this.CurrentDay = dayTrigger.Today;
         }
 
         private void DataUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) => Update();
@@ -62,25 +59,10 @@ namespace RemodelHelper.ViewModels
             this.Items = await RemodelData.Current.GetRemodelInfo(this.CurrentDay);
         }
 
-        private void UpdateDate()
+        private void UpdateDate(DayOfWeek before, DayOfWeek after)
         {
-            var day = GetJstNow().DayOfWeek;
-            while (true)
-            {
-                var current = GetJstNow().DayOfWeek;
-                // 日期更新
-                if (day != current)
-                {
-                    if (this.CurrentDay == day)
-                        this.CurrentDay = current;
-
-                    day = current;
-                }
-                // 每分钟检查一次
-                Thread.Sleep(60000);
-            }
+            if (this.CurrentDay == before)
+                this.CurrentDay = after;
         }
-
-        private static DateTime GetJstNow() => DateTime.UtcNow.AddHours(9);
     }
 }
