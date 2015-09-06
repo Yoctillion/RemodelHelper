@@ -159,13 +159,15 @@
   <ItemGroup>
     <Compile Include="Converters\DayOfWeekAndIntConverter.cs" />
     <Compile Include="Converters\SlotNameToVisibilityConverter.cs" />
-    <Compile Include="Models\DayOfWeekChangeTrigger.cs" />
+    <Compile Include="IdentifiableTable.cs" />
+    <Compile Include="Models\DateChangeTrigger.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\RemodelData.cs" />
+    <Compile Include="Models\RemodelDataProvider.cs" />
+    <Compile Include="Models\ShipWeekInfo.cs" />
+    <Compile Include="Models\SlotInfo.cs" />
     <Compile Include="Models\Week.cs" />
     <Compile Include="Plugin.cs" />
-    <Compile Include="ViewModels\ItemViewModel.cs" />
-    <Compile Include="ViewModels\ShipViewModel.cs" />
     <Compile Include="ViewModels\SlotTypeViewModel.cs" />
     <Compile Include="ViewModels\SlotViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />

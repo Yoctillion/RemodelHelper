@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grabacr07.KanColleWrapper;
-using Grabacr07.KanColleWrapper.Models;
 using Livet;
 using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
 {
-    class ToolViewModel : ViewModel
+    internal class ToolViewModel : ViewModel
     {
-        private Master Master => KanColleClient.Current.Master;
-
-        private RemodelData Data => RemodelData.Current;
+        private RemodelDataProvider DataProvider => RemodelDataProvider.Current;
 
 
         private IReadOnlyCollection<ItemViewModel> _items = new ItemViewModel[0];
@@ -33,6 +27,7 @@ namespace RemodelHelper.ViewModels
         }
 
         private IReadOnlyCollection<SlotTypeViewModel> _slotTypes;
+
         public IReadOnlyCollection<SlotTypeViewModel> SlotTypes
         {
             get { return this._slotTypes; }
@@ -52,11 +47,11 @@ namespace RemodelHelper.ViewModels
             set
             {
                 foreach (var type in SlotTypes) type.SetSelected(value);
-                this.UpdateSlotInfo();
+                this.UpdateItemInfo();
             }
         }
 
-        public IReadOnlyCollection<string> DaysOfWeek { get; }
+        public IReadOnlyCollection<string> DaysOfWeek { get; } = new[] { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
 
         private DayOfWeek _currentDay;
 
@@ -69,7 +64,7 @@ namespace RemodelHelper.ViewModels
                 {
                     this._currentDay = value;
                     this.RaisePropertyChanged();
-                    this.UpdateSlotInfo();
+                    this.UpdateItemInfo();
                 }
             }
         }
@@ -77,97 +72,65 @@ namespace RemodelHelper.ViewModels
 
         public ToolViewModel()
         {
-            this.DaysOfWeek = new[] { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+            DataProvider.PropertyChanged += (x, y) => this.Update();
 
-            RemodelData.Current.PropertyChanged += (x, y) => this.Update();
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+            var dayTrigger = new DateChangeTrigger(timeZone) { IsEnabled = true };
+            dayTrigger.DateChanged += (before, after) => this.CurrentDay = after.DayOfWeek;
 
-            var dayTrigger = new DayOfWeekChangeTrigger(TimeSpan.FromMinutes(1), 9) { IsEnabled = true };
-            dayTrigger.DateChanged += this.UpdateDate;
+            this.CurrentDay = dayTrigger.Today.DayOfWeek;
 
-            this.CurrentDay = dayTrigger.Today;
-
-            this.Update();
+            this.DataProvider.DataChanged += this.Update;
         }
 
         public void Update()
         {
+            if (!DataProvider.IsUpdateFinished) return;
+
             this.UpdateSlotTypes();
-            this.UpdateSlotInfo();
+            this.UpdateItemInfo();
         }
 
-        public async void UpdateSlotTypes()
+        public void UpdateSlotTypes()
         {
-            this.SlotTypes = await Task.Run(() => this.GetSlotTypes());
-        }
-
-        private IReadOnlyCollection<SlotTypeViewModel> GetSlotTypes()
-        {
-            this.WaitForMaster();
-
-            return this.Data.Items
-                .Select(item => item.SlotId)
-                .Select(id => Master.SlotItems[id]?.EquipType)
-                .Where(type => type != null && type.Name != "大型探照灯" && type.Name != "大型電探")
+            this.SlotTypes = this.DataProvider.Items.Values
+                .Select(slot => slot.Info.EquipType)
                 .Distinct()
-                .Select(type => new SlotTypeViewModel(type) { SelectionChangedAction = this.UpdateSlotInfo })
+                .Where(type => type.Name != "大型探照灯" && type.Name != "大型電探")
+                .Select(type => new SlotTypeViewModel(type) { SelectionChangedAction = this.UpdateItemInfo })
+                .ToArray();
+
+            this.RaisePropertyChanged(nameof(this.IsAllTypeSelected));
+        }
+
+        public void UpdateItemInfo()
+        {
+            this.Items = this.DataProvider.Items.Values
+                .Where(this.IsItemAvailable)
+                .Select(slot => new ItemViewModel
+                {
+                    Info = slot.Info,
+                    NewSlots = slot.NewSlots.Values
+                        .Where(newSlot => newSlot.IsAvailable(this.CurrentDay))
+                        .Select(newSlot => new NewSlotViewModel
+                        {
+                            Info = newSlot.Info,
+                            Ships = newSlot.Ships.Values
+                                .Where(ship => ship.Info != null && ship.IsAvailable(this.CurrentDay))
+                                .Select(ship => ship.Info)
+                                .ToArray(),
+                        }).ToArray(),
+                })
                 .ToArray();
         }
 
-        public async void UpdateSlotInfo()
+        private bool IsItemAvailable(ItemInfo item)
         {
-            this.RaisePropertyChanged(nameof(this.IsAllTypeSelected));
-            this.Items = await Task.Run(() => this.GetSlotInfo());
-        }
-
-        private IReadOnlyCollection<ItemViewModel> GetSlotInfo()
-        {
-            // 等待Master初始化完成
-            this.WaitForMaster();
-            // 等待装备类型信息初始化完成
-            while (this.SlotTypes == null) Thread.Sleep(100);
-
-            return this.Data.Items
-                .Where(this.IsItemAvailable)
-                .GroupBy(item => item.SlotId)
-                .Select(slotGroup => new ItemViewModel
-                {
-                    Slot = new SlotViewModel
-                    {
-                        Name = Master.SlotItems[slotGroup.Key]?.Name ?? "未知",
-                        Type = Master.SlotItems[slotGroup.Key]?.IconType ?? SlotItemIconType.Unknown,
-                    },
-
-                    NewSlot = slotGroup.GroupBy(slot => slot.NewId).Select(newSlots => new NewSlotViewModel
-                    {
-                        Name = Master.SlotItems[newSlots.Key]?.Name ?? "更新不可",
-                        Type = Master.SlotItems[newSlots.Key]?.IconType ?? SlotItemIconType.Unknown,
-
-                        Ships =
-                            newSlots.Select(item => new ShipViewModel { Name = Master.Ships[item.ShipId]?.Name ?? "" })
-                                .ToArray(),
-                    }).ToArray(),
-                }).ToArray();
-        }
-
-        private void WaitForMaster()
-        {
-            while (Master == null) Thread.Sleep(100);
-        }
-
-        private void UpdateDate(DayOfWeek before, DayOfWeek after)
-        {
-            if (this.CurrentDay == before)
-                this.CurrentDay = after;
-        }
-
-        private bool IsItemAvailable(Item item)
-        {
-            var slotType = this.Master.SlotItems[item.SlotId]?.EquipType;
-            return item.Week.HasFlag(this.CurrentDay.Convert())
+            var slotType = item.Info.EquipType;
+            return item.IsAvailable(this.CurrentDay)
                    && this.SlotTypes
                        .Where(type => type.IsSelected)
-                       .Any(type => slotType?.Id == type.Id
-                                    || (slotType?.Name.Contains(type.Name) ?? false));
+                       .Any(type => slotType.Id == type.Id || slotType.Name.Contains(type.Name));
         }
     }
 }

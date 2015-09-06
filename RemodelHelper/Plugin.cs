@@ -25,7 +25,7 @@ namespace RemodelHelper
 
         public void Initialize()
         {
-            RemodelData.Current.UpdateFromInternet();
+            RemodelDataProvider.Current.UpdateFromInternet();
         }
     }
 }

@@ -12,14 +12,17 @@ namespace RemodelHelper.ViewModels
 {
     class SlotViewModel : ViewModel
     {
-        public string Name { get; set; }
+        public SlotItemInfo Info { get; set; }
+    }
 
-        public SlotItemIconType Type { get; set; }
-
+    class ItemViewModel : SlotViewModel
+    {
+        public IReadOnlyCollection<NewSlotViewModel> NewSlots { get; set; }
     }
 
     class NewSlotViewModel : SlotViewModel
     {
-        public ShipViewModel[] Ships { get; set; }
+        public string Name => this.Info?.Name ?? "更新不可";
+        public IReadOnlyCollection<ShipInfo> Ships { get; set; }
     }
 }

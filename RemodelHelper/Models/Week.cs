@@ -35,5 +35,7 @@ namespace RemodelHelper.Models
             if (dayCount != 1) throw new InvalidCastException("错误的星期格式");
             return res;
         }
+
+        public static bool Contains(this Week week, DayOfWeek day) => week.HasFlag(day.Convert());
     }
 }

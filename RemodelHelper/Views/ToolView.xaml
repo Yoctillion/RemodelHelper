@@ -127,10 +127,10 @@
                                     <StackPanel Orientation="Horizontal">
                                         <Border Padding="0,1,5,1">
                                             <Viewbox Width="20">
-                                                <controls:SlotItemIcon Type="{Binding Slot.Type}" />
+                                                <controls:SlotItemIcon Type="{Binding Info.IconType}" />
                                             </Viewbox>
                                         </Border>
-                                        <TextBlock Text="{Binding Slot.Name, Mode=OneWay}"
+                                        <TextBlock Text="{Binding Info.Name, Mode=OneWay}"
                                                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
                                                    Margin="0,4" />
                                     </StackPanel>
@@ -152,7 +152,7 @@
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="{x:Type vm:ItemViewModel}">
-                                    <ItemsControl ItemsSource="{Binding NewSlot}"
+                                    <ItemsControl ItemsSource="{Binding NewSlots}"
                                                   Margin="0,0,0,-1">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -177,8 +177,9 @@
                                                         </ItemsControl>
                                                         <Border Padding="0,1,5,1">
                                                             <Viewbox Width="20"
+                                                                     VerticalAlignment="Top"
                                                                      Visibility="{Binding Name, Converter={StaticResource NameConverter}}">
-                                                                <controls:SlotItemIcon Type="{Binding Type}" />
+                                                                <controls:SlotItemIcon Type="{Binding Info.IconType}" />
                                                             </Viewbox>
                                                         </Border>
                                                         <TextBlock Text="{Binding Name, Mode=OneWay}"
