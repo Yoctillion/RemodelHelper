@@ -115,6 +115,7 @@ namespace RemodelHelper.ViewModels
                         .Select(newSlot => new NewSlotViewModel
                         {
                             Info = newSlot.Info,
+                            Level = newSlot.Level,
                             Ships = newSlot.Ships.Values
                                 .Where(ship => ship.Info != null && ship.IsAvailable(this.CurrentDay))
                                 .Select(ship => ship.Info)

@@ -12,7 +12,7 @@ namespace RemodelHelper
     [Export(typeof(IPlugin))]
     [ExportMetadata("Title", "改修助手")]
     [ExportMetadata("Description", "改修工厂辅助插件")]
-    [ExportMetadata("Version", "0.3.0")]
+    [ExportMetadata("Version", "0.4.0")]
     [ExportMetadata("Author", "Yoctillion")]
     [ExportMetadata("Guid", "71C1EE7A-A153-437F-B75F-E3E22ED833F1")]
     class Plugin : ITool, IPlugin

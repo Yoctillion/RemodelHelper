@@ -50,7 +50,7 @@ namespace RemodelHelper.Models
         {
             this.Load();
             if (this.RawData == null)
-                this.RawData = new RemodelData { Version = "0.0.0", Items = new Item[0] };
+                this.RawData = new RemodelData { Version = "000000", Items = new Item[0], NewSlots = new UpdateData[0], };
 
             KanColleClient.Current.Subscribe(nameof(KanColleClient.IsStarted), this.ParseData, false).AddTo(this);
         }
@@ -70,6 +70,10 @@ namespace RemodelHelper.Models
                 else
                     this.Items[item.SlotId].AddNewItem(item);
             }
+
+            foreach (var item in this.Items.Values)
+                foreach (var newSlot in item.NewSlots.Values)
+                    newSlot.Level = this.RawData.NewSlots.FirstOrDefault(s => s.Id == item.Id && s.NewId == newSlot.Id)?.Lv ?? 0;
 
             this.IsUpdateFinished = true;
 
@@ -113,7 +117,7 @@ namespace RemodelHelper.Models
                     {
                         var check = this._serializer.ReadObject(stream) as RemodelData;
 
-                        if (VersionComparer.Compare(this.RawData.Version, check?.Version) < 0)
+                        if (string.CompareOrdinal(this.RawData.Version, check?.Version) < 0)
                         {
                             this.RawData = check;
                             this.Save();
@@ -121,28 +125,6 @@ namespace RemodelHelper.Models
                     }
             };
             client.OpenReadAsync(url);
-        }
-
-
-        private static class VersionComparer
-        {
-            public static int Compare(string x, string y)
-            {
-                if (string.IsNullOrEmpty(y)) return 1;
-                if (string.IsNullOrEmpty(x)) return -1;
-
-                var vx = x.Split('.');
-                var vy = y.Split('.');
-
-                for (var i = 0; i < 3; i++)
-                {
-                    var vxi = int.Parse(vx[i]);
-                    var vyi = int.Parse(vy[i]);
-                    if (vxi < vyi) return -1;
-                    if (vxi > vyi) return 1;
-                }
-                return 0;
-            }
         }
 
         #endregion

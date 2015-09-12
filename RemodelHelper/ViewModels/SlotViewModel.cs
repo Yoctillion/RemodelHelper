@@ -23,6 +23,9 @@ namespace RemodelHelper.ViewModels
     class NewSlotViewModel : SlotViewModel
     {
         public string Name => this.Info?.Name ?? "更新不可";
+
+        public int Level { get; set; }
+
         public IReadOnlyCollection<ShipInfo> Ships { get; set; }
     }
 }

@@ -21,7 +21,6 @@
                 <ResourceDictionary Source="../Styles/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:DayOfWeekAndIntConverter x:Key="DayOfWeekAndIntConverter" />
-            <converters:SlotNameToVisibilityConverter x:Key="NameConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -140,7 +139,7 @@
                         <GridViewColumn Width="355">
                             <GridViewColumn.Header>
                                 <DockPanel>
-                                    <Border Width="155"
+                                    <Border Width="145"
                                             BorderThickness="0,0,1,0"
                                             BorderBrush="{DynamicResource BorderBrushKey}">
                                         <TextBlock Text="二号舰" />
@@ -160,7 +159,7 @@
                                                         BorderBrush="{DynamicResource BorderBrushKey}">
                                                     <DockPanel>
                                                         <ItemsControl ItemsSource="{Binding Ships}"
-                                                                      Width="156">
+                                                                      Width="146">
                                                             <ItemsControl.Template>
                                                                 <ControlTemplate TargetType="{x:Type ItemsControl}">
                                                                     <WrapPanel IsItemsHost="True"
@@ -177,14 +176,47 @@
                                                         </ItemsControl>
                                                         <Border Padding="0,1,5,1">
                                                             <Viewbox Width="20"
-                                                                     VerticalAlignment="Top"
-                                                                     Visibility="{Binding Name, Converter={StaticResource NameConverter}}">
+                                                                     VerticalAlignment="Top">
                                                                 <controls:SlotItemIcon Type="{Binding Info.IconType}" />
+                                                                <Viewbox.Style>
+                                                                    <Style TargetType="{x:Type Viewbox}">
+                                                                        <Setter Property="Visibility"
+                                                                                Value="Visible" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Name}"
+                                                                                         Value="更新不可">
+                                                                                <Setter Property="Visibility"
+                                                                                        Value="Hidden" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Viewbox.Style>
                                                             </Viewbox>
                                                         </Border>
                                                         <TextBlock Text="{Binding Name, Mode=OneWay}"
                                                                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
                                                                    Margin="0,4" />
+                                                        <TextBlock Margin="0,4">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="{x:Type TextBlock}">
+                                                                    <Setter Property="Text"
+                                                                            Value="{Binding Level, StringFormat=★+{0}}" />
+                                                                    <Setter Property="Foreground"
+                                                                            Value="#FF45A9A5" />
+                                                                    <Setter Property="Opacity"
+                                                                            Value="1.0" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Level}"
+                                                                                     Value="0">
+                                                                            <Setter Property="Foreground"
+                                                                                    Value="{DynamicResource InactiveForegroundBrushKey}" />
+                                                                            <Setter Property="Visibility"
+                                                                                    Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
                                                     </DockPanel>
                                                 </Border>
                                             </DataTemplate>

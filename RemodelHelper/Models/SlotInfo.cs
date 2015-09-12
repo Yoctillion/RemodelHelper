@@ -48,6 +48,7 @@ namespace RemodelHelper.Models
     {
         public IdentifiableTable<ShipWeekInfo> Ships { get; } = new IdentifiableTable<ShipWeekInfo>();
 
+        public int Level { get; set; }
 
         internal NewSlotInfo(Item item) : base(item.GetNewSlotInfo())
         {
