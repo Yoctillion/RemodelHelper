@@ -96,8 +96,8 @@
       <HintPath>..\packages\MetroTrilithon.0.1.0.0\lib\portable-net45+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\MetroTrilithon.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="MetroTrilithon.Desktop, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroTrilithon.Desktop.0.1.2.0\lib\net45\MetroTrilithon.Desktop.dll</HintPath>
+    <Reference Include="MetroTrilithon.Desktop, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroTrilithon.Desktop.0.1.4.0\lib\net45\MetroTrilithon.Desktop.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -108,8 +108,8 @@
       <HintPath>..\packages\LivetCask.1.1.0.0\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Nekoxy, Version=1.2.0.13, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nekoxy.1.2.0.13\lib\net45\Nekoxy.dll</HintPath>
+    <Reference Include="Nekoxy, Version=1.5.1.19, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nekoxy.1.5.1.19\lib\net45\Nekoxy.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="StatefulModel, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -149,7 +149,7 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="TrotiNet, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nekoxy.1.2.0.13\lib\net45\TrotiNet.dll</HintPath>
+      <HintPath>..\packages\Nekoxy.1.5.1.19\lib\net45\TrotiNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />

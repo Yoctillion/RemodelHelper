@@ -13,16 +13,16 @@ namespace RemodelHelper.Models
     public class Item
     {
         [DataMember]
-        public int SlotId { get; internal set; }
+        public int SlotId { get; set; }
 
         [DataMember]
-        public int ShipId { get; internal set; }
+        public int ShipId { get; set; }
 
         [DataMember]
-        public int NewId { get; internal set; }
+        public int NewId { get; set; }
 
         [DataMember]
-        public Week Week { get; internal set; }
+        public Week Week { get; set; }
     }
 
     public static class ItemExtensions
