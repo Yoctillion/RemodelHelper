@@ -7,19 +7,19 @@ using Grabacr07.KanColleWrapper.Models;
 
 namespace RemodelHelper.Models
 {
-    public class ShipWeekInfo : IIdentifiable
+    public class AssistantInfo : IIdentifiable
     {
-        public int Id => this.Info?.Id ?? 0;
+        public int Id => this.ShipInfo?.Id ?? 0;
 
-        public string Name => this.Info.Name;
+        public string Name => this.ShipInfo?.Name ?? "-";
 
-        public ShipInfo Info { get; }
+        public ShipInfo ShipInfo { get; }
 
         public Week Week { get; }
 
-        internal ShipWeekInfo(Item item)
+        internal AssistantInfo(Item item)
         {
-            this.Info = item.GetShipInfo();
+            this.ShipInfo = item.GetAssistantInfo();
             this.Week = item.Week;
         }
 

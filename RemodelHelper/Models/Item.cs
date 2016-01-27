@@ -27,13 +27,13 @@ namespace RemodelHelper.Models
 
     public static class ItemExtensions
     {
-        public static SlotItemInfo GetSlotInfo(this Item item)
+        public static SlotItemInfo GetBaseSlotInfo(this Item item)
             => KanColleClient.Current.Master.SlotItems[item.SlotId];
 
-        public static ShipInfo GetShipInfo(this Item item)
+        public static ShipInfo GetAssistantInfo(this Item item)
             => KanColleClient.Current.Master.Ships[item.ShipId];
 
-        public static SlotItemInfo GetNewSlotInfo(this Item item)
+        public static SlotItemInfo GetUpgradeSlotInfo(this Item item)
             => KanColleClient.Current.Master.SlotItems[item.NewId];
     }
 }

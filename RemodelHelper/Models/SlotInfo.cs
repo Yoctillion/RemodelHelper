@@ -22,44 +22,44 @@ namespace RemodelHelper.Models
     }
 
 
-    public class ItemInfo : SlotInfo
+    public class BaseSlotInfo : SlotInfo
     {
-        public IdentifiableTable<NewSlotInfo> NewSlots { get; } = new IdentifiableTable<NewSlotInfo>();
+        public IdentifiableTable<UpgradeSlotInfo> UpgradeSlots { get; } = new IdentifiableTable<UpgradeSlotInfo>();
 
 
-        internal ItemInfo(Item item) : base(item.GetSlotInfo())
+        internal BaseSlotInfo(Item item) : base(item.GetBaseSlotInfo())
         {
-            this.AddNewItem(item);
+            this.AddUpgradeSlot(item);
         }
 
-        internal void AddNewItem(Item item)
+        internal void AddUpgradeSlot(Item item)
         {
-            if (!this.NewSlots.ContainsKey(item.NewId))
-                this.NewSlots.Add(new NewSlotInfo(item));
+            if (!this.UpgradeSlots.ContainsKey(item.NewId))
+                this.UpgradeSlots.Add(new UpgradeSlotInfo(item));
             else
-                this.NewSlots[item.NewId].AddShip(item);
+                this.UpgradeSlots[item.NewId].AddAssistant(item);
         }
 
-        public bool IsAvailable(DayOfWeek day) => this.NewSlots.Values.Any(newSlot => newSlot.IsAvailable(day));
+        public bool IsAvailable(DayOfWeek day) => this.UpgradeSlots.Values.Any(newSlot => newSlot.IsAvailable(day));
     }
 
 
-    public class NewSlotInfo : SlotInfo
+    public class UpgradeSlotInfo : SlotInfo
     {
-        public IdentifiableTable<ShipWeekInfo> Ships { get; } = new IdentifiableTable<ShipWeekInfo>();
+        public IdentifiableTable<AssistantInfo> Assistants { get; } = new IdentifiableTable<AssistantInfo>();
 
         public int Level { get; set; }
 
-        internal NewSlotInfo(Item item) : base(item.GetNewSlotInfo())
+        internal UpgradeSlotInfo(Item item) : base(item.GetUpgradeSlotInfo())
         {
-            this.AddShip(item);
+            this.AddAssistant(item);
         }
 
-        internal void AddShip(Item item)
+        internal void AddAssistant(Item item)
         {
-            this.Ships.Add(new ShipWeekInfo(item));
+            this.Assistants.Add(new AssistantInfo(item));
         }
 
-        public bool IsAvailable(DayOfWeek day) => this.Ships.Values.Any(ship => ship.IsAvailable(day));
+        public bool IsAvailable(DayOfWeek day) => this.Assistants.Values.Any(ship => ship.IsAvailable(day));
     }
 }

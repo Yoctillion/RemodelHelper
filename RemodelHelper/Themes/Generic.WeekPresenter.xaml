@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:RemodelHelper.Controls">
+
+    <Style TargetType="{x:Type controls:WeekPresenter}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:WeekPresenter}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ItemsControl ItemsSource="{TemplateBinding Weekdays}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="7" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:DayOfWeekPresenter DayOfWeek="{Binding}"
+                                                                 CurrentDay="{Binding CurrentDay, RelativeSource={RelativeSource AncestorType=controls:WeekPresenter}}"
+                                                                 Value="{Binding Value, RelativeSource={RelativeSource AncestorType=controls:WeekPresenter}}"
+                                                                 BorderThickness="{Binding CellBorderThickness, RelativeSource={RelativeSource AncestorType=controls:WeekPresenter}}"
+                                                                 BorderBrush="{Binding CellBorderBrush, RelativeSource={RelativeSource AncestorType=controls:WeekPresenter}}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

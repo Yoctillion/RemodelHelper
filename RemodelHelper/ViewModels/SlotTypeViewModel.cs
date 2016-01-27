@@ -10,10 +10,10 @@ namespace RemodelHelper.ViewModels
 {
     public delegate void SelectionChangedEvent(bool selected);
 
-    class SlotTypeViewModel : ViewModel
+    public class SlotTypeViewModel : ViewModel, IEquatable<SlotItemEquipType>
     {
         public Action SelectionChangedAction { get; set; }
-        
+
         public int Id { get; }
 
         public string Name { get; }
@@ -37,7 +37,7 @@ namespace RemodelHelper.ViewModels
         public SlotTypeViewModel(SlotItemEquipType type)
         {
             this.Id = type.Id;
-            this.Name = type.Name != "大型電探" && type.Name != "小型電探" ? type.Name : "電探";
+            this.Name = type.Name;
         }
 
         public void SetSelected(bool value)
@@ -46,5 +46,9 @@ namespace RemodelHelper.ViewModels
             this.RaisePropertyChanged(nameof(this.IsSelected));
         }
 
+        public bool Equals(SlotItemEquipType slotType)
+        {
+            return slotType.Id == this.Id;
+        }
     }
 }

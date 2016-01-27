@@ -157,6 +157,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\DayOfWeekPresenter.cs" />
+    <Compile Include="Controls\WeekPresenter.cs" />
     <Compile Include="Converters\DayOfWeekAndIntConverter.cs" />
     <Compile Include="IdentifiableTable.cs" />
     <Compile Include="Models\DateChangeTrigger.cs" />
@@ -164,13 +166,19 @@
     <Compile Include="Models\UpdateData.cs" />
     <Compile Include="Models\RemodelData.cs" />
     <Compile Include="Models\RemodelDataProvider.cs" />
-    <Compile Include="Models\ShipWeekInfo.cs" />
+    <Compile Include="Models\AssistantInfo.cs" />
     <Compile Include="Models\SlotInfo.cs" />
     <Compile Include="Models\Week.cs" />
     <Compile Include="Plugin.cs" />
+    <Compile Include="ViewModels\AssistantGroupViewModel.cs" />
+    <Compile Include="ViewModels\DetailViewModel.cs" />
+    <Compile Include="ViewModels\ItemsViewModel.cs" />
     <Compile Include="ViewModels\SlotTypeViewModel.cs" />
     <Compile Include="ViewModels\SlotViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />
+    <Compile Include="Views\DetailWindow.xaml.cs">
+      <DependentUpon>DetailWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>
@@ -207,6 +215,24 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="Styles\Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.DayOfWeekPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>Generic.xaml</DependentUpon>
+    </Page>
+    <Page Include="Themes\Generic.WeekPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>Generic.xaml</DependentUpon>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DetailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,22 +11,37 @@ using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
 {
-    class SlotViewModel : ViewModel
+    public class SlotViewModel : ViewModel
     {
         public SlotItemInfo Info { get; set; }
+
     }
 
-    class ItemViewModel : SlotViewModel
+    public class BaseSlotViewModel : SlotViewModel
     {
-        public IReadOnlyCollection<NewSlotViewModel> NewSlots { get; set; }
+        public UpgradeSlotViewModel[] UpgradeSlots { get; set; }
+
+        public bool IsAvailable(DayOfWeek day)
+        {
+            return this.UpgradeSlots.Any(slot => slot.IsAvailable(day));
+        }
     }
 
-    class NewSlotViewModel : SlotViewModel
+    public class UpgradeSlotViewModel : SlotViewModel
     {
         public string Name => this.Info?.Name ?? "更新不可";
 
         public int Level { get; set; }
 
-        public IReadOnlyCollection<ShipInfo> Ships { get; set; }
+        public bool NeedAssistant { get; set; }
+
+        public AssistantInfo[] Assistants { get; set; }
+
+        public AssistantGroupViewModel[] AssistantGroups { get; set; }
+
+        public bool IsAvailable(DayOfWeek day)
+        {
+            return this.Assistants.Any(assistant => assistant.IsAvailable(day));
+        }
     }
 }

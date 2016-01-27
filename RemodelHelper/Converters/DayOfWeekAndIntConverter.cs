@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace RemodelHelper.Converters
 {
-    class DayOfWeekAndIntConverter : IValueConverter
+    public class DayOfWeekAndIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

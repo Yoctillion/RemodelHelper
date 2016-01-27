@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Threading;
 
 namespace RemodelHelper.Models
@@ -7,27 +8,26 @@ namespace RemodelHelper.Models
     {
         private readonly DispatcherTimer _timer;
 
-        private readonly TimeZoneInfo _timeZone;
+        public TimeZoneInfo TimeZone { get; }
 
         public event Action<DateTime, DateTime> DateChanged;
 
         private DateTime _currentDay;
 
-        public DateTime Today => TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this._timeZone).Date;
-
-        public bool IsEnabled { get; set; }
+        public DateTime Today => TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.TimeZone).Date;
 
 
-        public DateChangeTrigger(TimeZoneInfo info = null)
+        private DateChangeTrigger(TimeZoneInfo info)
         {
-            this._timeZone = info ?? TimeZoneInfo.Utc;
+            this.TimeZone = info;
+            this._currentDay = this.Today;
 
             this._timer = new DispatcherTimer { Interval = this.GetSleepTime() };
             this._timer.Tick += (x, y) =>
             {
                 this._timer.Interval = this.GetSleepTime();
-                
-                if (this.IsEnabled) this.DateChanged?.Invoke(this._currentDay, this.Today);
+
+                this.DateChanged?.Invoke(this._currentDay, this.Today);
                 this._currentDay = this.Today;
             };
             this._timer.Start();
@@ -38,6 +38,23 @@ namespace RemodelHelper.Models
         public void Dispose()
         {
             this._timer.Stop();
+        }
+
+
+        private static readonly Dictionary<TimeZoneInfo, DateChangeTrigger> Triggers = new Dictionary<TimeZoneInfo, DateChangeTrigger>();
+
+        public static DateChangeTrigger GetTigger(TimeZoneInfo info = null)
+        {
+            if (info == null) info = TimeZoneInfo.Utc;
+
+            DateChangeTrigger trigger;
+            if (!Triggers.TryGetValue(info, out trigger))
+            {
+                trigger = new DateChangeTrigger(info);
+                Triggers.Add(info, trigger);
+            }
+
+            return trigger;
         }
     }
 }

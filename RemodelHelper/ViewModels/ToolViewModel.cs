@@ -2,56 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Livet;
+using Livet.Messaging;
 using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
 {
-    internal class ToolViewModel : ViewModel
+    public class ToolViewModel : ItemsViewModel
     {
-        private RemodelDataProvider DataProvider => RemodelDataProvider.Current;
-
-
-        private IReadOnlyCollection<ItemViewModel> _items = new ItemViewModel[0];
-
-        public IReadOnlyCollection<ItemViewModel> Items
-        {
-            get { return this._items; }
-            set
-            {
-                if (this._items != value)
-                {
-                    this._items = value;
-                    this.RaisePropertyChanged();
-                }
-            }
-        }
-
-        private IReadOnlyCollection<SlotTypeViewModel> _slotTypes;
-
-        public IReadOnlyCollection<SlotTypeViewModel> SlotTypes
-        {
-            get { return this._slotTypes; }
-            set
-            {
-                if (this._slotTypes != value)
-                {
-                    this._slotTypes = value;
-                    this.RaisePropertyChanged();
-                }
-            }
-        }
-
-        public bool IsAllTypeSelected
-        {
-            get { return SlotTypes.All(type => type.IsSelected); }
-            set
-            {
-                foreach (var type in SlotTypes) type.SetSelected(value);
-                this.UpdateItemInfo();
-            }
-        }
-
-        public IReadOnlyCollection<string> DaysOfWeek { get; } = new[] { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
+        public string[] DaysOfWeek { get; } =
+            { "周日（日）", "周一（月）", "周二（水）", "周三（火）", "周四（木）", "周五（金）", "周六（土）" };
 
         private DayOfWeek _currentDay;
 
@@ -64,7 +23,7 @@ namespace RemodelHelper.ViewModels
                 {
                     this._currentDay = value;
                     this.RaisePropertyChanged();
-                    this.UpdateItemInfo();
+                    this.UpdateSlotInfo();
                 }
             }
         }
@@ -72,66 +31,44 @@ namespace RemodelHelper.ViewModels
 
         public ToolViewModel()
         {
-            DataProvider.PropertyChanged += (x, y) => this.Update();
-
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
-            var dayTrigger = new DateChangeTrigger(timeZone) { IsEnabled = true };
+            var dayTrigger = DateChangeTrigger.GetTigger(timeZone);
             dayTrigger.DateChanged += (before, after) => this.CurrentDay = after.DayOfWeek;
 
             this.CurrentDay = dayTrigger.Today.DayOfWeek;
 
-            this.DataProvider.DataChanged += this.Update;
+            DataProvider.DataChanged += this.Update;
         }
 
-        public void Update()
+        protected override IEnumerable<BaseSlotViewModel> GetUpdateSlotInfo()
         {
-            if (!DataProvider.IsUpdateFinished) return;
-
-            this.UpdateSlotTypes();
-            this.UpdateItemInfo();
+            return base.GetUpdateSlotInfo().Where(item => item.IsAvailable(this.CurrentDay));
         }
 
-        public void UpdateSlotTypes()
+        protected override bool FilterBaseSlot(BaseSlotInfo baseSlot)
         {
-            this.SlotTypes = this.DataProvider.Items.Values
-                .Select(slot => slot.Info.EquipType)
-                .Distinct()
-                .Where(type => type.Name != "大型探照灯" && type.Name != "大型電探")
-                .Select(type => new SlotTypeViewModel(type) { SelectionChangedAction = this.UpdateItemInfo })
-                .ToArray();
+            if (!baseSlot.IsAvailable(this.CurrentDay)) return false;
 
-            this.RaisePropertyChanged(nameof(this.IsAllTypeSelected));
+            return base.FilterBaseSlot(baseSlot);
         }
 
-        public void UpdateItemInfo()
+        protected override bool FilterAssistant(BaseSlotInfo baseSlot, UpgradeSlotInfo upgradeSlot, AssistantInfo assistant)
         {
-            this.Items = this.DataProvider.Items.Values
-                .Where(this.IsItemAvailable)
-                .Select(slot => new ItemViewModel
-                {
-                    Info = slot.Info,
-                    NewSlots = slot.NewSlots.Values
-                        .Where(newSlot => newSlot.IsAvailable(this.CurrentDay))
-                        .Select(newSlot => new NewSlotViewModel
-                        {
-                            Info = newSlot.Info,
-                            Level = newSlot.Level,
-                            Ships = newSlot.Ships.Values
-                                .Where(ship => ship.Info != null && ship.IsAvailable(this.CurrentDay))
-                                .Select(ship => ship.Info)
-                                .ToArray(),
-                        }).ToArray(),
-                })
-                .ToArray();
+            return base.FilterAssistant(baseSlot, upgradeSlot, assistant) && assistant.IsAvailable(this.CurrentDay);
         }
 
-        private bool IsItemAvailable(ItemInfo item)
+        public void OpenDetailWindow()
         {
-            var slotType = item.Info.EquipType;
-            return item.IsAvailable(this.CurrentDay)
-                   && this.SlotTypes
-                       .Where(type => type.IsSelected)
-                       .Any(type => slotType.Id == type.Id || slotType.Name.Contains(type.Name));
+            var message = new TransitionMessage("Show/DetailWindow")
+            {
+                TransitionViewModel = new DetailViewModel()
+            };
+            this.Messenger.Raise(message);
+        }
+
+        public void UpdateData()
+        {
+            DataProvider.UpdateFromInternet();
         }
     }
 }

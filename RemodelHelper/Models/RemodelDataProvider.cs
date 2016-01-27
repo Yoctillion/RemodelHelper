@@ -6,13 +6,11 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using Grabacr07.KanColleWrapper;
-using Livet;
-using MetroTrilithon.Lifetime;
 using MetroTrilithon.Mvvm;
 
 namespace RemodelHelper.Models
 {
-    public class RemodelDataProvider : NotificationObject, IDisposableHolder
+    public class RemodelDataProvider
     {
         public static RemodelDataProvider Current { get; } = new RemodelDataProvider();
 
@@ -34,7 +32,7 @@ namespace RemodelHelper.Models
 
         public string Version => this.RawData?.Version;
 
-        public IdentifiableTable<ItemInfo> Items { get; internal set; } = new IdentifiableTable<ItemInfo>();
+        public IdentifiableTable<BaseSlotInfo> Items { get; internal set; } = new IdentifiableTable<BaseSlotInfo>();
 
 
         private string DataPath { get; } =
@@ -43,8 +41,6 @@ namespace RemodelHelper.Models
                 "KanColleViewer",
                 "RemodelData.json");
 
-        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(RemodelData));
-
 
         private RemodelDataProvider()
         {
@@ -52,42 +48,51 @@ namespace RemodelHelper.Models
             if (this.RawData == null)
                 this.RawData = new RemodelData { Version = "000000", Items = new Item[0], NewSlots = new UpdateData[0], };
 
-            KanColleClient.Current.Subscribe(nameof(KanColleClient.IsStarted), this.ParseData, false).AddTo(this);
+            KanColleClient.Current.Subscribe(nameof(KanColleClient.IsStarted), this.ParseData, false);
         }
 
+
+        public event Action DataChanged;
+
         #region analyze data
+
+        private readonly object _updateLock = new object();
 
         private void ParseData()
         {
             if (!KanColleClient.Current.IsStarted || this.RawData == null) return; // 初始化未完成
 
-            this.IsUpdateFinished = false;
-
-            foreach (var item in this.RawData.Items.Where(item => item.GetSlotInfo() != null))
+            lock (this._updateLock)
             {
-                if (!this.Items.ContainsKey(item.SlotId))
-                    this.Items.Add(new ItemInfo(item));
-                else
-                    this.Items[item.SlotId].AddNewItem(item);
+                this.IsReady = false;
+
+                foreach (var item in this.RawData.Items.Where(item => item.GetBaseSlotInfo() != null))
+                {
+                    if (!this.Items.ContainsKey(item.SlotId))
+                        this.Items.Add(new BaseSlotInfo(item));
+                    else
+                        this.Items[item.SlotId].AddUpgradeSlot(item);
+                }
+
+                foreach (var item in this.Items.Values)
+                    foreach (var newSlot in item.UpgradeSlots.Values)
+                        newSlot.Level =
+                            this.RawData.NewSlots.FirstOrDefault(s => s.Id == item.Id && s.NewId == newSlot.Id)?.Lv ?? 0;
+
+                this.IsReady = true;
             }
-
-            foreach (var item in this.Items.Values)
-                foreach (var newSlot in item.NewSlots.Values)
-                    newSlot.Level = this.RawData.NewSlots.FirstOrDefault(s => s.Id == item.Id && s.NewId == newSlot.Id)?.Lv ?? 0;
-
-            this.IsUpdateFinished = true;
 
             DataChanged?.Invoke();
         }
 
-        public bool IsUpdateFinished { get; set; }
-
-        public event Action DataChanged;
+        public bool IsReady { get; private set; } = false;
 
         #endregion
 
 
         #region S/L & update
+
+        private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(RemodelData));
 
         public void Save()
         {
@@ -107,36 +112,28 @@ namespace RemodelHelper.Models
 
         public void UpdateFromInternet()
         {
-            var url = new Uri(@"https://raw.githubusercontent.com/Yoctillion/RemodelHelper/master/Data/RemodelData.json");
+            var url = new Uri("https://raw.githubusercontent.com/Yoctillion/RemodelHelper/master/Data/RemodelData.json");
 
-            var client = new WebClient();
-            client.OpenReadCompleted += (s, e) =>
+            using (var client = new WebClient())
             {
-                if (e.Error == null)
-                    using (var stream = e.Result)
-                    {
-                        var check = this._serializer.ReadObject(stream) as RemodelData;
-
-                        if (string.CompareOrdinal(this.RawData.Version, check?.Version) < 0)
+                client.OpenReadCompleted += (s, e) =>
+                {
+                    if (e.Error == null)
+                        using (var stream = e.Result)
                         {
-                            this.RawData = check;
-                            this.Save();
+                            var check = this._serializer.ReadObject(stream) as RemodelData;
+
+                            if (string.CompareOrdinal(this.RawData.Version, check?.Version) < 0)
+                            {
+                                this.RawData = check;
+                                this.Save();
+                            }
                         }
-                    }
-            };
-            client.OpenReadAsync(url);
+                };
+                client.OpenReadAsync(url);
+            }
         }
 
         #endregion
-
-
-        private readonly LivetCompositeDisposable _compositeDisposable = new LivetCompositeDisposable();
-
-        public void Dispose()
-        {
-            this._compositeDisposable.Dispose();
-        }
-
-        public ICollection<IDisposable> CompositeDisposable => this._compositeDisposable;
     }
 }

@@ -7,8 +7,9 @@
              xmlns:controls="http://schemes.grabacr.net/winfx/2015/kancolleviewer/controls"
              xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
              xmlns:metro2="clr-namespace:MetroTrilithon.Controls;assembly=MetroTrilithon.Desktop"
-             xmlns:converters="clr-namespace:RemodelHelper.Converters"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:messaging="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:views="clr-namespace:RemodelHelper.Views"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d"
@@ -20,10 +21,17 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:DayOfWeekAndIntConverter x:Key="DayOfWeekAndIntConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <i:Interaction.Triggers>
+        <messaging:InteractionMessageTrigger Messenger="{Binding Messenger}"
+                                             MessageKey="Show/DetailWindow">
+            <messaging:TransitionInteractionMessageAction Mode="NewOrActive"
+                                                          WindowType="views:DetailWindow"
+                                                          IsOwned="False" />
+        </messaging:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
 
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
@@ -34,39 +42,27 @@
 
             <metro:PromptComboBox ItemsSource="{Binding DaysOfWeek}"
                                   SelectedIndex="{Binding CurrentDay, Converter={StaticResource DayOfWeekAndIntConverter}, Mode=TwoWay}"
-                                  Width="50"
                                   VerticalAlignment="Center"
                                   Margin="2" />
 
-            <Border Width="1"
-                    Background="{DynamicResource ActiveBorderBrushKey}"
-                    Margin="5,3" />
+            <metro2:CallMethodButton DockPanel.Dock="Right"
+                                     Content="详细"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Stretch"
+                                     MethodName="OpenDetailWindow"
+                                     Margin="0,2" />
 
-            <CheckBox Content="全选"
-                      IsChecked="{Binding IsAllTypeSelected}"
-                      Margin="2,2,10,2"
-                      VerticalAlignment="Top" />
+            <metro2:CallMethodButton DockPanel.Dock="Right"
+                                     Content="更新数据"
+                                     MethodName="UpdateData"
+                                     HorizontalAlignment="Right"
+                                     Margin="2,2" />
 
-            <ItemsControl ItemsSource="{Binding SlotTypes}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                  Margin="0,2,10,2">
-                            <TextBlock Text="{Binding Name}" />
-                        </CheckBox>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
         </DockPanel>
 
         <Border BorderBrush="{DynamicResource BorderBrushKey}"
                 BorderThickness="0">
-            <ListView ItemsSource="{Binding Items}"
+            <ListView ItemsSource="{Binding BaseSlots}"
                       ItemContainerStyle="{DynamicResource GridViewItemContainerStyleKey}"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -122,7 +118,7 @@
                                 <TextBlock Text="装备名" />
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate DataType="{x:Type vm:ItemViewModel}">
+                                <DataTemplate DataType="{x:Type vm:BaseSlotViewModel}">
                                     <StackPanel Orientation="Horizontal">
                                         <Border Padding="0,1,5,1">
                                             <Viewbox Width="20">
@@ -150,15 +146,15 @@
                                 </DockPanel>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate DataType="{x:Type vm:ItemViewModel}">
-                                    <ItemsControl ItemsSource="{Binding NewSlots}"
+                                <DataTemplate DataType="{x:Type vm:BaseSlotViewModel}">
+                                    <ItemsControl ItemsSource="{Binding UpgradeSlots}"
                                                   Margin="0,0,0,-1">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="0,0,0,1"
                                                         BorderBrush="{DynamicResource BorderBrushKey}">
                                                     <DockPanel>
-                                                        <ItemsControl ItemsSource="{Binding Ships}"
+                                                        <ItemsControl ItemsSource="{Binding Assistants}"
                                                                       Width="146">
                                                             <ItemsControl.Template>
                                                                 <ControlTemplate TargetType="{x:Type ItemsControl}">
