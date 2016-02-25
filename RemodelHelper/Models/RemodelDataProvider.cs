@@ -104,10 +104,11 @@ namespace RemodelHelper.Models
 
         private RemodelDataProvider()
         {
+#if DEBUG
             this.Load();
             if (this.RawData == null)
                 this.RawData = new RemodelData { Version = "000000", Items = new Item[0], NewSlots = new UpgradeData[0], };
-
+#endif
             KanColleClient.Current.Subscribe(nameof(KanColleClient.IsStarted), this.ParseData, false);
         }
 
@@ -152,6 +153,7 @@ namespace RemodelHelper.Models
 
         private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(RemodelData));
 
+#if DEBUG
         public void Save()
         {
             using (var stream = Stream.Synchronized(new FileStream(this.DataPath, FileMode.Create, FileAccess.Write)))
@@ -167,7 +169,7 @@ namespace RemodelHelper.Models
                 if (obj != null) this.RawData = obj;
             }
         }
-
+#endif
 
         private readonly object _iLock = new object();
 
@@ -191,7 +193,6 @@ namespace RemodelHelper.Models
                             if (string.CompareOrdinal(this.RawData.Version, check?.Version) < 0)
                             {
                                 this.RawData = check;
-                                this.Save();
                             }
                         }
                     }
