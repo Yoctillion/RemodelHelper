@@ -5,14 +5,18 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Threading.Tasks;
 using Grabacr07.KanColleWrapper;
 using MetroTrilithon.Mvvm;
+using Notifier = Grabacr07.KanColleWrapper.Notifier;
 
 namespace RemodelHelper.Models
 {
-    public class RemodelDataProvider
+    public class RemodelDataProvider : Notifier
     {
         public static RemodelDataProvider Current { get; } = new RemodelDataProvider();
+
+        #region RawData
 
         private RemodelData _rawData;
 
@@ -29,10 +33,66 @@ namespace RemodelHelper.Models
             }
         }
 
+        #endregion
+
+        #region Items
 
         public string Version => this.RawData?.Version;
 
-        public IdentifiableTable<BaseSlotInfo> Items { get; internal set; } = new IdentifiableTable<BaseSlotInfo>();
+        private IdentifiableTable<BaseSlotInfo> _items = new IdentifiableTable<BaseSlotInfo>();
+
+        public IdentifiableTable<BaseSlotInfo> Items
+        {
+            get { return this._items; }
+            private set
+            {
+                if (this._items != value)
+                {
+                    this._items = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region IsReady
+
+        private bool _isReady;
+
+        public bool IsReady
+        {
+            get { return this._isReady; }
+            private set
+            {
+                if (this._isReady != value)
+                {
+                    this._isReady = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region IsUpdating
+
+        private bool _isUpdating;
+
+        public bool IsUpdating
+        {
+            get { return this._isUpdating; }
+            private set
+            {
+                if (this._isUpdating != value)
+                {
+                    this._isUpdating = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        #endregion
 
 
         private string DataPath { get; } =
@@ -46,13 +106,11 @@ namespace RemodelHelper.Models
         {
             this.Load();
             if (this.RawData == null)
-                this.RawData = new RemodelData { Version = "000000", Items = new Item[0], NewSlots = new UpdateData[0], };
+                this.RawData = new RemodelData { Version = "000000", Items = new Item[0], NewSlots = new UpgradeData[0], };
 
             KanColleClient.Current.Subscribe(nameof(KanColleClient.IsStarted), this.ParseData, false);
         }
 
-
-        public event Action DataChanged;
 
         #region analyze data
 
@@ -66,26 +124,26 @@ namespace RemodelHelper.Models
             {
                 this.IsReady = false;
 
+                var newItems = new IdentifiableTable<BaseSlotInfo>();
+
                 foreach (var item in this.RawData.Items.Where(item => item.GetBaseSlotInfo() != null))
                 {
-                    if (!this.Items.ContainsKey(item.SlotId))
-                        this.Items.Add(new BaseSlotInfo(item));
+                    if (!newItems.ContainsKey(item.SlotId))
+                        newItems.Add(new BaseSlotInfo(item));
                     else
-                        this.Items[item.SlotId].AddUpgradeSlot(item);
+                        newItems[item.SlotId].AddUpgradeSlot(item);
                 }
 
-                foreach (var item in this.Items.Values)
+                foreach (var item in newItems.Values)
                     foreach (var newSlot in item.UpgradeSlots.Values)
                         newSlot.Level =
                             this.RawData.NewSlots.FirstOrDefault(s => s.Id == item.Id && s.NewId == newSlot.Id)?.Lv ?? 0;
 
+                this.Items = newItems;
+
                 this.IsReady = true;
             }
-
-            DataChanged?.Invoke();
         }
-
-        public bool IsReady { get; private set; } = false;
 
         #endregion
 
@@ -110,16 +168,23 @@ namespace RemodelHelper.Models
             }
         }
 
-        public void UpdateFromInternet()
-        {
-            var url = new Uri("https://raw.githubusercontent.com/Yoctillion/RemodelHelper/master/Data/RemodelData.json");
 
-            using (var client = new WebClient())
+        private readonly object _iLock = new object();
+
+        public async void UpdateFromInternet()
+        {
+            const string url = "https://raw.githubusercontent.com/Yoctillion/RemodelHelper/master/Data/RemodelData.json";
+
+            await Task.Run(() =>
             {
-                client.OpenReadCompleted += (s, e) =>
+                lock (this._iLock)
                 {
-                    if (e.Error == null)
-                        using (var stream = e.Result)
+                    this.IsUpdating = true;
+
+                    try
+                    {
+                        using (var client = new WebClient())
+                        using (var stream = client.OpenRead(url))
                         {
                             var check = this._serializer.ReadObject(stream) as RemodelData;
 
@@ -129,9 +194,14 @@ namespace RemodelHelper.Models
                                 this.Save();
                             }
                         }
-                };
-                client.OpenReadAsync(url);
-            }
+                    }
+                    catch (WebException)
+                    {
+                    }
+
+                    this.IsUpdating = false;
+                }
+            });
         }
 
         #endregion

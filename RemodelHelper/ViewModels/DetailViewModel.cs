@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using Grabacr07.KanColleWrapper;
+using MetroTrilithon.Mvvm;
 using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
@@ -111,11 +112,11 @@ namespace RemodelHelper.ViewModels
 
             this.CurrentDay = this._dayTrigger.Today.DayOfWeek;
 
-            DataProvider.DataChanged += this.Update;
+            DataProvider
+                .Subscribe(nameof(DataProvider.Items), this.Update, false)
+                .AddTo(this);
 
-            this.UpdateAction -= this.UpdateSlotInfo;
             this.UpdateAction += this.UpdateSlotTypes;
-            this.UpdateAction += this.UpdateSlotInfo;
 
             this.Update();
         }
@@ -160,7 +161,7 @@ namespace RemodelHelper.ViewModels
             if (this.SlotTypes != null)
             {
                 var slotType = baseSlot.Info.EquipType;
-                if (!this.SlotTypes.Where(type => type.IsSelected).Any(type => type.Equals(slotType)))
+                if (this.SlotTypes.Where(type => !type.IsSelected).Any(type => type.Equals(slotType)))
                 {
                     return false;
                 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Livet;
 using Livet.Messaging;
+using MetroTrilithon.Mvvm;
 using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
@@ -28,6 +29,20 @@ namespace RemodelHelper.ViewModels
             }
         }
 
+        private bool _isReady;
+
+        public bool IsReady
+        {
+            get { return this._isReady; }
+            set
+            {
+                if (this._isReady != value)
+                {
+                    this._isReady = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
 
         public ToolViewModel()
         {
@@ -37,7 +52,13 @@ namespace RemodelHelper.ViewModels
 
             this.CurrentDay = dayTrigger.Today.DayOfWeek;
 
-            DataProvider.DataChanged += this.Update;
+            DataProvider
+                .Subscribe(nameof(RemodelDataProvider.Items), this.Update, false)
+                .AddTo(this);
+
+            DataProvider
+                .Subscribe(nameof(RemodelDataProvider.IsUpdating), () => this.IsReady = !DataProvider.IsUpdating)
+                .AddTo(this);
         }
 
         protected override IEnumerable<BaseSlotViewModel> GetUpdateSlotInfo()

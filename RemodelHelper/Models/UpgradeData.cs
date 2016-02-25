@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RemodelHelper.Models
 {
-    public class UpdateData
+    public class UpgradeData
     {
         public int Id { get; set; }
 

@@ -55,6 +55,7 @@
             <metro2:CallMethodButton DockPanel.Dock="Right"
                                      Content="更新数据"
                                      MethodName="UpdateData"
+                                     IsEnabled="{Binding IsReady}"
                                      HorizontalAlignment="Right"
                                      Margin="2,2" />
 

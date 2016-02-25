@@ -12,6 +12,6 @@ namespace RemodelHelper.Models
         public Item[] Items { get; set; }
 
         [DataMember]
-        public UpdateData[] NewSlots { get; set; }
+        public UpgradeData[] NewSlots { get; set; }
     }
 }

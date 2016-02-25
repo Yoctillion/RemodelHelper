@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Livet;
+using MetroTrilithon.Mvvm;
 using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
 {
     public abstract class ItemsViewModel : ViewModel
     {
-        protected static readonly RemodelDataProvider DataProvider = RemodelDataProvider.Current;
+        protected static RemodelDataProvider DataProvider => RemodelDataProvider.Current;
 
 
         private BaseSlotViewModel[] _baseSlots;
@@ -31,7 +32,9 @@ namespace RemodelHelper.ViewModels
 
         protected ItemsViewModel()
         {
-            DataProvider.DataChanged += this.Update;
+            DataProvider
+                .Subscribe(nameof(RemodelDataProvider.Items), this.Update, false)
+                .AddTo(this);
 
             this.UpdateAction += this.UpdateSlotInfo;
         }
@@ -40,8 +43,7 @@ namespace RemodelHelper.ViewModels
 
         public void Update()
         {
-            if (DataProvider.IsReady)
-                this.UpdateAction?.Invoke();
+            this.UpdateAction?.Invoke();
         }
 
         public void UpdateSlotInfo()
