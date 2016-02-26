@@ -19,7 +19,7 @@ namespace RemodelHelper.ViewModels
         public int Width
         {
             get { return this._width; }
-            private set
+            set
             {
                 if (this._width != value)
                 {
@@ -131,7 +131,7 @@ namespace RemodelHelper.ViewModels
                     this._isHideConsumption = value;
                     this.RaisePropertyChanged();
                     this.ConsumptionVisibility = value ? Visibility.Collapsed : Visibility.Visible;
-                    this.Width = value ? 550 : 850;
+                    this.Width = value ? 750 : 1050;
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace RemodelHelper.ViewModels
 
         public DetailViewModel()
         {
-            this.Width = 850;
+            this.Width = 1050;
 
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
             this._dayTrigger = DateChangeTrigger.GetTigger(timeZone);

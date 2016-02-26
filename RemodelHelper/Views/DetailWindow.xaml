@@ -126,12 +126,12 @@
                                        Grid.Column="0"
                                        Margin="0,2"
                                        Text="日期："
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" />
                             <WrapPanel Grid.Row="0"
                                        Grid.Column="2">
                                 <metro:PromptComboBox ItemsSource="{Binding DaysOfWeek}"
                                                       SelectedIndex="{Binding CurrentDay, Converter={StaticResource DayOfWeekAndIntConverter}, Mode=TwoWay}"
-                                                      Margin="0,2,14,2"/>
+                                                      Margin="0,2,14,2" />
 
                                 <metro2:CallMethodButton Content="返回今天"
                                                          MethodName="BackToToday"
@@ -225,71 +225,21 @@
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="200">
-                                <GridViewColumn.Header>
-                                    <TextBlock Text="装备名" />
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border Padding="0,1,5,1">
-                                                <Viewbox Width="20">
-                                                    <kcvc:SlotItemIcon Type="{Binding Info.IconType}" />
-                                                </Viewbox>
-                                            </Border>
-                                            <TextBlock x:Name="BaseName"
-                                                       Text="{Binding Info.Name, Mode=OneWay}"
-                                                       Foreground="{DynamicResource ActiveForegroundBrushKey}"
-                                                       Margin="0,4" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="{Binding Width, Mode=OneWay}">
+                            <GridViewColumn Width="{Binding Width, Mode=TwoWay}">
                                 <GridViewColumn.Header>
                                     <DockPanel>
-                                        <Border Width="160"
+                                        <Border Width="200"
                                                 BorderThickness="0,0,1,0"
                                                 BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="二号舰" />
+                                            <TextBlock Text="装备名" />
                                         </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="日" />
-                                        </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="一" />
-                                        </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="二" />
-                                        </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="三" />
-                                        </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="四" />
-                                        </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="五" />
-                                        </Border>
-                                        <Border Width="25"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="六" />
-                                        </Border>
-                                        <StackPanel Orientation="Horizontal"
-                                                    Visibility="{Binding ConsumptionVisibility}">
+                                        <DockPanel Visibility="{Binding ConsumptionVisibility}">
+                                            <Border BorderThickness="0,0,1,1"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}"
+                                                    DockPanel.Dock="Top">
+                                                <TextBlock Text="改修消耗"
+                                                           TextAlignment="Center" />
+                                            </Border>
                                             <Border Width="35"
                                                     BorderThickness="0,0,1,0"
                                                     BorderBrush="{DynamicResource BorderBrushKey}">
@@ -330,90 +280,190 @@
                                                     BorderBrush="{DynamicResource BorderBrushKey}">
                                                 <TextBlock Text="消费装备" />
                                             </Border>
-                                        </StackPanel>
-                                        <Border>
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Border BorderThickness="0,0,1,1"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}"
+                                                    DockPanel.Dock="Top">
+                                                <TextBlock Text="日期"
+                                                           TextAlignment="Center" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="日" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="一" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="二" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="三" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="四" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="五" />
+                                            </Border>
+                                            <Border Width="25"
+                                                    BorderThickness="0,0,1,0"
+                                                    BorderBrush="{DynamicResource BorderBrushKey}">
+                                                <TextBlock Text="六" />
+                                            </Border>
+                                        </DockPanel>
+                                        <Border Width="160"
+                                                BorderThickness="0,0,1,0"
+                                                BorderBrush="{DynamicResource BorderBrushKey}">
+                                            <TextBlock Text="二号舰" />
+                                        </Border>
+                                        <Border BorderThickness="0,0,1,0"
+                                                BorderBrush="{DynamicResource BorderBrushKey}">
                                             <TextBlock Text="更新装备" />
                                         </Border>
                                     </DockPanel>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
-                                        <ItemsControl ItemsSource="{Binding UpgradeSlotItems}"
-                                                      Margin="0,0,0,-1">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border BorderThickness="0,0,0,1"
-                                                            BorderBrush="{DynamicResource BorderBrushKey}">
-                                                        <DockPanel>
-                                                            <ItemsControl
-                                                                ItemsSource="{Binding AssistantGroups, Mode=OneWay}"
-                                                                Margin="0,0,0,-1">
-                                                                <ItemsControl.ItemsPanel>
-                                                                    <ItemsPanelTemplate>
-                                                                        <UniformGrid Columns="1" />
-                                                                    </ItemsPanelTemplate>
-                                                                </ItemsControl.ItemsPanel>
-                                                                <ItemsControl.ItemTemplate>
-                                                                    <DataTemplate>
-                                                                        <DockPanel>
-                                                                            <Border BorderThickness="0,0,0,1"
-                                                                                    BorderBrush="{DynamicResource BorderBrushKey}"
-                                                                                    HorizontalAlignment="Stretch">
-                                                                                <ItemsControl
-                                                                                    ItemsSource="{Binding Assistants}"
-                                                                                    Width="156">
-                                                                                    <ItemsControl.Template>
-                                                                                        <ControlTemplate>
-                                                                                            <WrapPanel
-                                                                                                IsItemsHost="True"
-                                                                                                Margin="0,0,0,4" />
-                                                                                        </ControlTemplate>
-                                                                                    </ItemsControl.Template>
-                                                                                    <ItemsControl.ItemTemplate>
-                                                                                        <DataTemplate>
-                                                                                            <TextBlock
-                                                                                                Margin="0,4,18,0"
-                                                                                                Text="{Binding Name, Mode=OneWay}"
-                                                                                                Foreground="{DynamicResource ActiveForegroundBrushKey}" />
-                                                                                        </DataTemplate>
-                                                                                    </ItemsControl.ItemTemplate>
-                                                                                </ItemsControl>
-                                                                            </Border>
+                                        <DockPanel>
+                                            <DockPanel Width="196"
+                                                       VerticalAlignment="Center">
+                                                <Border Padding="0,1,5,1">
+                                                    <Viewbox Width="20">
+                                                        <kcvc:SlotItemIcon Type="{Binding Info.IconType}" />
+                                                    </Viewbox>
+                                                </Border>
+                                                <TextBlock Text="{Binding Info.Name, Mode=OneWay}"
+                                                           Foreground="{DynamicResource ActiveForegroundBrushKey}"
+                                                           Margin="0,4" />
+                                            </DockPanel>
+                                            <ItemsControl ItemsSource="{Binding UpgradeSlotItems}"
+                                                          Margin="0,0,0,-1">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderThickness="0,0,0,1"
+                                                                BorderBrush="{DynamicResource BorderBrushKey}">
+                                                            <DockPanel>
+                                                                <DockPanel Visibility="{Binding DataContext.ConsumptionVisibility, RelativeSource={RelativeSource AncestorType=Window}}">
+                                                                    <TextBlock Text="{Binding Fuel}"
+                                                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                                                               TextAlignment="Center"
+                                                                               Width="35" />
+                                                                    <TextBlock Text="{Binding Ammo}"
+                                                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                                                               TextAlignment="Center"
+                                                                               Width="35" />
+                                                                    <TextBlock Text="{Binding Steel}"
+                                                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                                                               TextAlignment="Center"
+                                                                               Width="35" />
+                                                                    <TextBlock Text="{Binding Bauxite}"
+                                                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                                                               TextAlignment="Center"
+                                                                               Width="35" />
+                                                                    <ItemsControl
+                                                                        ItemsSource="{Binding Consumptions, Mode=OneWay}"
+                                                                        Margin="0,0,0,-1"
+                                                                        VerticalAlignment="Stretch">
+                                                                        <ItemsControl.ItemsPanel>
+                                                                            <ItemsPanelTemplate>
+                                                                                <UniformGrid Columns="1" />
+                                                                            </ItemsPanelTemplate>
+                                                                        </ItemsControl.ItemsPanel>
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <Border BorderThickness="0,0,0,1"
+                                                                                        BorderBrush="{DynamicResource BorderBrushKey}">
+                                                                                    <DockPanel Margin="0,2">
+                                                                                        <TextBlock
+                                                                                            Text="{Binding Name}"
+                                                                                            Style="{DynamicResource DefaultTextStyleKey}"
+                                                                                            Foreground="#FF45A9A5"
+                                                                                            Width="45" />
+                                                                                        <TextBlock
+                                                                                            Text="{Binding Info.BuildKit}"
+                                                                                            Width="40"
+                                                                                            Style="{DynamicResource DefaultTextStyleKey}"
+                                                                                            TextAlignment="Center" />
+                                                                                        <TextBlock
+                                                                                            Text="{Binding Info.RemodelKit}"
+                                                                                            Width="40"
+                                                                                            Style="{DynamicResource DefaultTextStyleKey}"
+                                                                                            TextAlignment="Center" />
+                                                                                        <TextBlock
+                                                                                            Text="{Binding Info.ConsumeCount}"
+                                                                                            Width="40"
+                                                                                            TextAlignment="Center">
+                                                                                            <TextBlock.Style>
+                                                                                                <Style
+                                                                                                    TargetType="{x:Type TextBlock}"
+                                                                                                    BasedOn="{StaticResource DefaultTextStyleKey}">
+                                                                                                    <Setter
+                                                                                                        Property="IsEnabled"
+                                                                                                        Value="True" />
+                                                                                                    <Setter
+                                                                                                        Property="Foreground"
+                                                                                                        Value="{DynamicResource ForegroundBrushKey}" />
+                                                                                                    <Style.Triggers>
+                                                                                                        <DataTrigger
+                                                                                                            Binding="{Binding Info.ConsumeCount}"
+                                                                                                            Value="0">
+                                                                                                            <Setter
+                                                                                                                Property="IsEnabled"
+                                                                                                                Value="False" />
+                                                                                                        </DataTrigger>
+                                                                                                        <DataTrigger
+                                                                                                            Binding="{Binding IsDifferent}"
+                                                                                                            Value="True">
+                                                                                                            <Setter
+                                                                                                                Property="Foreground"
+                                                                                                                Value="#D07070" />
+                                                                                                        </DataTrigger>
+                                                                                                    </Style.Triggers>
+                                                                                                </Style>
+                                                                                            </TextBlock.Style>
+                                                                                            <TextBlock.ToolTip>
+                                                                                                <DockPanel>
+                                                                                                    <Viewbox Width="20">
+                                                                                                        <kcvc:SlotItemIcon
+                                                                                                            Type="{Binding Info.ConsumeSlotItem.IconType}" />
+                                                                                                    </Viewbox>
+                                                                                                    <Border Width="4" />
+                                                                                                    <TextBlock
+                                                                                                        Style="{DynamicResource DefaultTextStyleKey}"
+                                                                                                        Foreground="{DynamicResource ActiveForegroundBrushKey}">
+                                                                                                        <Run
+                                                                                                            Text="{Binding Info.ConsumeSlotItem.Name, Mode=OneWay}" />
+                                                                                                        <Run Text="×"
+                                                                                                             Style="{DynamicResource DefaultTextElementStyleKey}" />
+                                                                                                        <Run
+                                                                                                            Text="{Binding Info.ConsumeCount, Mode=OneWay}" />
+                                                                                                    </TextBlock>
+                                                                                                </DockPanel>
+                                                                                            </TextBlock.ToolTip>
+                                                                                        </TextBlock>
+                                                                                    </DockPanel>
+                                                                                </Border>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </DockPanel>
 
-                                                                            <controls:WeekPresenter
-                                                                                Value="{Binding Week}"
-                                                                                CurrentDay="{Binding DataContext.CurrentDay, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                                Width="175"
-                                                                                BorderThickness="0,0,0,1"
-                                                                                BorderBrush="{DynamicResource BorderBrushKey}"
-                                                                                CellBorderThickness="0,0,1,0"
-                                                                                CellBorderBrush="{DynamicResource BorderBrushKey}" />
-                                                                        </DockPanel>
-                                                                    </DataTemplate>
-                                                                </ItemsControl.ItemTemplate>
-                                                            </ItemsControl>
-
-                                                            <StackPanel Orientation="Horizontal"
-                                                                        Visibility="{Binding DataContext.ConsumptionVisibility, RelativeSource={RelativeSource AncestorType=Window}}">
-                                                                <TextBlock Text="{Binding Fuel}"
-                                                                           Style="{DynamicResource DefaultTextStyleKey}"
-                                                                           TextAlignment="Center"
-                                                                           Width="35" />
-                                                                <TextBlock Text="{Binding Ammo}"
-                                                                           Style="{DynamicResource DefaultTextStyleKey}"
-                                                                           TextAlignment="Center"
-                                                                           Width="35" />
-                                                                <TextBlock Text="{Binding Steel}"
-                                                                           Style="{DynamicResource DefaultTextStyleKey}"
-                                                                           TextAlignment="Center"
-                                                                           Width="35" />
-                                                                <TextBlock Text="{Binding Bauxite}"
-                                                                           Style="{DynamicResource DefaultTextStyleKey}"
-                                                                           TextAlignment="Center"
-                                                                           Width="35" />
-                                                                <ItemsControl ItemsSource="{Binding Consumptions, Mode=OneWay}"
-                                                                              Margin="0,0,0,-1"
-                                                                              VerticalAlignment="Stretch">
+                                                                <ItemsControl
+                                                                    ItemsSource="{Binding AssistantGroups, Mode=OneWay}"
+                                                                    Margin="0,0,0,-1">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
                                                                             <UniformGrid Columns="1" />
@@ -421,117 +471,99 @@
                                                                     </ItemsControl.ItemsPanel>
                                                                     <ItemsControl.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <Border BorderThickness="0,0,0,1"
-                                                                                    BorderBrush="{DynamicResource BorderBrushKey}">
-                                                                                <DockPanel Margin="0,2">
-                                                                                    <TextBlock Text="{Binding Name}"
-                                                                                               Style="{DynamicResource DefaultTextStyleKey}"
-                                                                                               Foreground="#FF45A9A5"
-                                                                                               Width="45" />
-                                                                                    <TextBlock Text="{Binding Info.BuildKit}"
-                                                                                               Width="40"
-                                                                                               Style="{DynamicResource DefaultTextStyleKey}"
-                                                                                               TextAlignment="Center" />
-                                                                                    <TextBlock Text="{Binding Info.RemodelKit}"
-                                                                                               Width="40"
-                                                                                               Style="{DynamicResource DefaultTextStyleKey}"
-                                                                                               TextAlignment="Center" />
-                                                                                    <TextBlock
-                                                                                        Text="{Binding Info.ConsumeCount}"
-                                                                                        Width="40"
-                                                                                        TextAlignment="Center">
-                                                                                        <TextBlock.Style>
-                                                                                            <Style TargetType="{x:Type TextBlock}"
-                                                                                                   BasedOn="{StaticResource DefaultTextStyleKey}">
-                                                                                                <Setter Property="IsEnabled"
-                                                                                                        Value="True" />
-                                                                                                <Setter Property="Foreground"
-                                                                                                        Value="{DynamicResource ForegroundBrushKey}" />
-                                                                                                <Style.Triggers>
-                                                                                                    <DataTrigger Binding="{Binding Info.ConsumeCount}"
-                                                                                                                 Value="0">
-                                                                                                        <Setter Property="IsEnabled"
-                                                                                                                Value="False" />
-                                                                                                    </DataTrigger>
-                                                                                                    <DataTrigger Binding="{Binding IsDifferent}"
-                                                                                                                 Value="True">
-                                                                                                        <Setter Property="Foreground"
-                                                                                                                Value="#D05050" />
-                                                                                                    </DataTrigger>
-                                                                                                </Style.Triggers>
-                                                                                            </Style>
-                                                                                        </TextBlock.Style>
-                                                                                        <TextBlock.ToolTip>
-                                                                                            <DockPanel>
-                                                                                                <Viewbox Width="20">
-                                                                                                    <kcvc:SlotItemIcon Type="{Binding Info.ConsumeSlotItem.IconType}" />
-                                                                                                </Viewbox>
-                                                                                                <Border Width="4" />
+                                                                            <DockPanel>
+
+                                                                                <controls:WeekPresenter
+                                                                                    Value="{Binding Week}"
+                                                                                    CurrentDay="{Binding DataContext.CurrentDay, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    Width="175"
+                                                                                    BorderThickness="0,0,0,1"
+                                                                                    BorderBrush="{DynamicResource BorderBrushKey}"
+                                                                                    CellBorderThickness="0,0,1,0"
+                                                                                    CellBorderBrush="{DynamicResource BorderBrushKey}" />
+
+                                                                                <Border BorderThickness="0,0,0,1"
+                                                                                        BorderBrush="{DynamicResource BorderBrushKey}"
+                                                                                        HorizontalAlignment="Stretch">
+                                                                                    <ItemsControl
+                                                                                        ItemsSource="{Binding Assistants}"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Width="160">
+                                                                                        <ItemsControl.Template>
+                                                                                            <ControlTemplate>
+                                                                                                <WrapPanel IsItemsHost="True"
+                                                                                                           Margin="4,0,0,4" />
+                                                                                            </ControlTemplate>
+                                                                                        </ItemsControl.Template>
+                                                                                        <ItemsControl.ItemTemplate>
+                                                                                            <DataTemplate>
                                                                                                 <TextBlock
-                                                                                                        Style="{DynamicResource DefaultTextStyleKey}"
-                                                                                                        Foreground="{DynamicResource ActiveForegroundBrushKey}">
-                                                                                                    <Run Text="{Binding Info.ConsumeSlotItem.Name, Mode=OneWay}" />
-                                                                                                    <Run Text="×"
-                                                                                                         Style="{DynamicResource DefaultTextElementStyleKey}" />
-                                                                                                    <Run Text="{Binding Info.ConsumeCount, Mode=OneWay}" />
-                                                                                                </TextBlock>
-                                                                                            </DockPanel>
-                                                                                        </TextBlock.ToolTip>
-                                                                                    </TextBlock>
-                                                                                </DockPanel>
-                                                                            </Border>
+                                                                                                    Margin="0,4,18,0"
+                                                                                                    Text="{Binding Name, Mode=OneWay}"
+                                                                                                    Foreground="{DynamicResource ActiveForegroundBrushKey}" />
+                                                                                            </DataTemplate>
+                                                                                        </ItemsControl.ItemTemplate>
+                                                                                    </ItemsControl>
+                                                                                </Border>
+                                                                            </DockPanel>
                                                                         </DataTemplate>
                                                                     </ItemsControl.ItemTemplate>
                                                                 </ItemsControl>
-                                                            </StackPanel>
-                                                            <Border Padding="5,1">
-                                                                <Viewbox Width="20"
-                                                                         VerticalAlignment="Top">
-                                                                    <kcvc:SlotItemIcon Type="{Binding Info.IconType}" />
-                                                                    <Viewbox.Style>
-                                                                        <Style TargetType="{x:Type Viewbox}">
-                                                                            <Setter Property="Visibility"
-                                                                                    Value="Visible" />
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Name}"
-                                                                                             Value="更新不可">
+                                                                <DockPanel VerticalAlignment="Center">
+                                                                    <Border Padding="5,1">
+                                                                        <Viewbox Width="20"
+                                                                                 VerticalAlignment="Top">
+                                                                            <kcvc:SlotItemIcon
+                                                                                Type="{Binding Info.IconType}" />
+                                                                            <Viewbox.Style>
+                                                                                <Style TargetType="{x:Type Viewbox}">
                                                                                     <Setter Property="Visibility"
-                                                                                            Value="Hidden" />
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </Viewbox.Style>
-                                                                </Viewbox>
-                                                            </Border>
-                                                            <TextBlock Text="{Binding Name, Mode=OneWay}"
-                                                                       Foreground="{DynamicResource ActiveForegroundBrushKey}"
-                                                                       Margin="0,4" />
-                                                            <TextBlock Margin="0,4">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="{x:Type TextBlock}">
-                                                                        <Setter Property="Text"
-                                                                                Value="{Binding Level, StringFormat=★+{0}}" />
-                                                                        <Setter Property="Foreground"
-                                                                                Value="#FF45A9A5" />
-                                                                        <Setter Property="Opacity"
-                                                                                Value="1.0" />
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Level}"
-                                                                                         Value="0">
+                                                                                            Value="Visible" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger
+                                                                                            Binding="{Binding Name}"
+                                                                                            Value="更新不可">
+                                                                                            <Setter
+                                                                                                Property="Visibility"
+                                                                                                Value="Hidden" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Viewbox.Style>
+                                                                        </Viewbox>
+                                                                    </Border>
+                                                                    <TextBlock Text="{Binding Name, Mode=OneWay}"
+                                                                               Foreground="{DynamicResource ActiveForegroundBrushKey}"
+                                                                               Margin="0,4" />
+                                                                    <TextBlock Margin="0,4">
+                                                                        <TextBlock.Style>
+                                                                            <Style TargetType="{x:Type TextBlock}">
+                                                                                <Setter Property="Text"
+                                                                                        Value="{Binding Level, StringFormat=★+{0}}" />
                                                                                 <Setter Property="Foreground"
-                                                                                        Value="{DynamicResource InactiveForegroundBrushKey}" />
-                                                                                <Setter Property="Visibility"
-                                                                                        Value="Collapsed" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
-                                                        </DockPanel>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                                                                        Value="#FF45A9A5" />
+                                                                                <Setter Property="Opacity"
+                                                                                        Value="1.0" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger
+                                                                                        Binding="{Binding Level}"
+                                                                                        Value="0">
+                                                                                        <Setter Property="Foreground"
+                                                                                                Value="{DynamicResource InactiveForegroundBrushKey}" />
+                                                                                        <Setter Property="Visibility"
+                                                                                                Value="Collapsed" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </TextBlock.Style>
+                                                                    </TextBlock>
+                                                                </DockPanel>
+                                                            </DockPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
