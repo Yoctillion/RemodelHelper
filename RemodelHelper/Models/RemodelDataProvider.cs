@@ -211,6 +211,9 @@ namespace RemodelHelper.Models
                             if (string.CompareOrdinal(this.RawData.Version, check?.Version) < 0)
                             {
                                 this.RawData = check;
+#if DEBUG
+                                this.Save();
+#endif
                             }
                         }
                     }
