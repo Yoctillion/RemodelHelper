@@ -159,20 +159,23 @@
     <Compile Include="Controls\WeekPresenter.cs" />
     <Compile Include="Converters\DayOfWeekAndIntConverter.cs" />
     <Compile Include="IdentifiableTable.cs" />
+    <Compile Include="Models\ConsumptionData.cs" />
+    <Compile Include="Models\ConsumptionInfo.cs" />
     <Compile Include="Models\DateChangeTrigger.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\UpgradeData.cs" />
     <Compile Include="Models\RemodelData.cs" />
     <Compile Include="Models\RemodelDataProvider.cs" />
     <Compile Include="Models\AssistantInfo.cs" />
-    <Compile Include="Models\SlotInfo.cs" />
+    <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\Week.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="ViewModels\AssistantGroupViewModel.cs" />
+    <Compile Include="ViewModels\ConsumptionViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\ItemsViewModel.cs" />
-    <Compile Include="ViewModels\SlotTypeViewModel.cs" />
-    <Compile Include="ViewModels\SlotViewModel.cs" />
+    <Compile Include="ViewModels\SlotItemTypeViewModel.cs" />
+    <Compile Include="ViewModels\SlotItemViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />
     <Compile Include="Views\DetailWindow.xaml.cs">
       <DependentUpon>DetailWindow.xaml</DependentUpon>

@@ -10,7 +10,7 @@ namespace RemodelHelper.ViewModels
 {
     public delegate void SelectionChangedEvent(bool selected);
 
-    public class SlotTypeViewModel : ViewModel, IEquatable<SlotItemEquipType>
+    public class SlotItemTypeViewModel : ViewModel, IEquatable<SlotItemEquipType>
     {
         public Action SelectionChangedAction { get; set; }
 
@@ -34,7 +34,7 @@ namespace RemodelHelper.ViewModels
             }
         }
 
-        public SlotTypeViewModel(SlotItemEquipType type)
+        public SlotItemTypeViewModel(SlotItemEquipType type)
         {
             this.Id = type.Id;
             this.Name = type.Name;

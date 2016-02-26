@@ -13,5 +13,9 @@ namespace RemodelHelper.Models
         public int NewId { get; set; }
 
         public int Lv { get; set; }
+
+        public int[] Meterials { get; set; }
+
+        public ConsumptionData[] Consumption { get; set; }
     }
 }

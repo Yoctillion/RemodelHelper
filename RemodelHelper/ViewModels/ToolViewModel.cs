@@ -61,21 +61,21 @@ namespace RemodelHelper.ViewModels
                 .AddTo(this);
         }
 
-        protected override IEnumerable<BaseSlotViewModel> GetUpdateSlotInfo()
+        protected override IEnumerable<BaseSlotItemViewModel> GetUpdateSlotItemInfo()
         {
-            return base.GetUpdateSlotInfo().Where(item => item.IsAvailable(this.CurrentDay));
+            return base.GetUpdateSlotItemInfo().Where(item => item.IsAvailable(this.CurrentDay));
         }
 
-        protected override bool FilterBaseSlot(BaseSlotInfo baseSlot)
+        protected override bool FilterBaseSlotItem(BaseSlotItemInfo baseSlotItem)
         {
-            if (!baseSlot.IsAvailable(this.CurrentDay)) return false;
+            if (!baseSlotItem.IsAvailable(this.CurrentDay)) return false;
 
-            return base.FilterBaseSlot(baseSlot);
+            return base.FilterBaseSlotItem(baseSlotItem);
         }
 
-        protected override bool FilterAssistant(BaseSlotInfo baseSlot, UpgradeSlotInfo upgradeSlot, AssistantInfo assistant)
+        protected override bool FilterAssistant(BaseSlotItemInfo baseSlotItem, UpgradeSlotItemInfo upgradeSlotItem, AssistantInfo assistant)
         {
-            return base.FilterAssistant(baseSlot, upgradeSlot, assistant) && assistant.IsAvailable(this.CurrentDay);
+            return base.FilterAssistant(baseSlotItem, upgradeSlotItem, assistant) && assistant.IsAvailable(this.CurrentDay);
         }
 
         public void OpenDetailWindow()

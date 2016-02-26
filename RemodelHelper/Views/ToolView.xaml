@@ -63,7 +63,7 @@
 
         <Border BorderBrush="{DynamicResource BorderBrushKey}"
                 BorderThickness="0">
-            <ListView ItemsSource="{Binding BaseSlots}"
+            <ListView ItemsSource="{Binding BaseSlotItems}"
                       ItemContainerStyle="{DynamicResource GridViewItemContainerStyleKey}"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -119,7 +119,7 @@
                                 <TextBlock Text="装备名" />
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate DataType="{x:Type vm:BaseSlotViewModel}">
+                                <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
                                     <StackPanel Orientation="Horizontal">
                                         <Border Padding="0,1,5,1">
                                             <Viewbox Width="20">
@@ -147,8 +147,8 @@
                                 </DockPanel>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate DataType="{x:Type vm:BaseSlotViewModel}">
-                                    <ItemsControl ItemsSource="{Binding UpgradeSlots}"
+                                <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
+                                    <ItemsControl ItemsSource="{Binding UpgradeSlotItems}"
                                                   Margin="0,0,0,-1">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>

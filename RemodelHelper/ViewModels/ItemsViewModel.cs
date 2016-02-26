@@ -14,16 +14,16 @@ namespace RemodelHelper.ViewModels
         protected static RemodelDataProvider DataProvider => RemodelDataProvider.Current;
 
 
-        private BaseSlotViewModel[] _baseSlots;
+        private BaseSlotItemViewModel[] _baseSlotItems;
 
-        public BaseSlotViewModel[] BaseSlots
+        public BaseSlotItemViewModel[] BaseSlotItems
         {
-            get { return this._baseSlots; }
+            get { return this._baseSlotItems; }
             set
             {
-                if (this._baseSlots != value)
+                if (this._baseSlotItems != value)
                 {
-                    this._baseSlots = value;
+                    this._baseSlotItems = value;
                     this.RaisePropertyChanged();
                 }
             }
@@ -48,27 +48,39 @@ namespace RemodelHelper.ViewModels
 
         public void UpdateSlotInfo()
         {
-            this.BaseSlots = this.GetUpdateSlotInfo().ToArray();
+            this.BaseSlotItems = this.GetUpdateSlotItemInfo().ToArray();
         }
 
-        protected virtual IEnumerable<BaseSlotViewModel> GetUpdateSlotInfo()
+        protected virtual IEnumerable<BaseSlotItemViewModel> GetUpdateSlotItemInfo()
         {
             return DataProvider.Items.Values
-                .Where(this.FilterBaseSlot)
-                .Select(bSlot => new BaseSlotViewModel
+                .Where(this.FilterBaseSlotItem)
+                .Select(baseItem => new BaseSlotItemViewModel
                 {
-                    Info = bSlot.Info,
-                    UpgradeSlots = bSlot.UpgradeSlots.Values
-                        .Where(upgradeSlot => this.FilterUpgradeSlot(bSlot, upgradeSlot))
-                        .Select(uSlot => new UpgradeSlotViewModel
+                    Info = baseItem.Info,
+                    UpgradeSlotItems = baseItem.UpgradeSlotItems.Values
+                        .Where(upgradeSlot => this.FilterUpgradeSlotItem(baseItem, upgradeSlot))
+                        .Select(upgradeItem => new UpgradeSlotItemViewModel
                         {
-                            Info = uSlot.Info,
-                            Level = uSlot.Level,
-                            NeedAssistant = uSlot.Assistants.Values.Any(ship => ship.ShipInfo == null),
-                            Assistants = uSlot.Assistants.Values
-                                .Where(a => this.FilterAssistant(bSlot, uSlot, a))
+                            Info = upgradeItem.Info,
+                            Level = upgradeItem.Level,
+                            Fuel = upgradeItem.Fuel,
+                            Ammo = upgradeItem.Ammo,
+                            Steel = upgradeItem.Steel,
+                            Bauxite = upgradeItem.Bauxite,
+                            Consumptions = upgradeItem.Consumptions
+                                .Where(c => c.ConsumeCount >= 0)
+                                .Select(c => new ConsumptionViewModel
+                                {
+                                    Info = c,
+                                    IsDifferent = c.ConsumeSlotItem != null && baseItem.Id != c.ConsumeSlotItem.Id,
+                                })
                                 .ToArray(),
-                            AssistantGroups = uSlot.Assistants.Values.Where(a => this.FilterAssistant(bSlot, uSlot, a))
+                            NeedAssistant = upgradeItem.Assistants.Values.Any(ship => ship.ShipInfo == null),
+                            Assistants = upgradeItem.Assistants.Values
+                                .Where(a => this.FilterAssistant(baseItem, upgradeItem, a))
+                                .ToArray(),
+                            AssistantGroups = upgradeItem.Assistants.Values.Where(a => this.FilterAssistant(baseItem, upgradeItem, a))
                             .GroupBy(assistant => assistant.Week)
                             .Select(group => new AssistantGroupViewModel
                             {
@@ -76,23 +88,23 @@ namespace RemodelHelper.ViewModels
                                 Assistants = group.ToArray(),
                             }).ToArray(),
                         })
-                        .Where(newSlot => newSlot.NeedAssistant || newSlot.Assistants.Length > 0)
+                        .Where(newItem => newItem.NeedAssistant || newItem.Assistants.Length > 0)
                         .ToArray(),
                 })
-                .Where(item => item.UpgradeSlots.Length > 0);
+                .Where(item => item.UpgradeSlotItems.Length > 0);
         }
 
-        protected virtual bool FilterBaseSlot(BaseSlotInfo baseSlot)
+        protected virtual bool FilterBaseSlotItem(BaseSlotItemInfo baseSlotItem)
         {
             return true;
         }
 
-        protected virtual bool FilterUpgradeSlot(BaseSlotInfo baseSlot, UpgradeSlotInfo upgradeSlot)
+        protected virtual bool FilterUpgradeSlotItem(BaseSlotItemInfo baseSlotItem, UpgradeSlotItemInfo upgradeSlotItem)
         {
             return true;
         }
 
-        protected virtual bool FilterAssistant(BaseSlotInfo baseSlot, UpgradeSlotInfo upgradeSlot, AssistantInfo assistant)
+        protected virtual bool FilterAssistant(BaseSlotItemInfo baseSlotItem, UpgradeSlotItemInfo upgradeSlotItem, AssistantInfo assistant)
         {
             return true;
         }

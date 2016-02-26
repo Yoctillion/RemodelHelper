@@ -11,27 +11,37 @@ using RemodelHelper.Models;
 
 namespace RemodelHelper.ViewModels
 {
-    public class SlotViewModel : ViewModel
+    public class SlotItemViewModel : ViewModel
     {
         public SlotItemInfo Info { get; set; }
 
     }
 
-    public class BaseSlotViewModel : SlotViewModel
+    public class BaseSlotItemViewModel : SlotItemViewModel
     {
-        public UpgradeSlotViewModel[] UpgradeSlots { get; set; }
+        public UpgradeSlotItemViewModel[] UpgradeSlotItems { get; set; }
 
         public bool IsAvailable(DayOfWeek day)
         {
-            return this.UpgradeSlots.Any(slot => slot.IsAvailable(day));
+            return this.UpgradeSlotItems.Any(slot => slot.IsAvailable(day));
         }
     }
 
-    public class UpgradeSlotViewModel : SlotViewModel
+    public class UpgradeSlotItemViewModel : SlotItemViewModel
     {
         public string Name => this.Info?.Name ?? "更新不可";
 
         public int Level { get; set; }
+
+        public int Fuel { get; set; }
+
+        public int Ammo { get; set; }
+
+        public int Steel { get; set; }
+
+        public int Bauxite { get; set; }
+
+        public ConsumptionViewModel[] Consumptions { get; set; }
 
         public bool NeedAssistant { get; set; }
 

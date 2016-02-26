@@ -39,9 +39,9 @@ namespace RemodelHelper.Models
 
         public string Version => this.RawData?.Version;
 
-        private IdentifiableTable<BaseSlotInfo> _items = new IdentifiableTable<BaseSlotInfo>();
+        private IdentifiableTable<BaseSlotItemInfo> _items = new IdentifiableTable<BaseSlotItemInfo>();
 
-        public IdentifiableTable<BaseSlotInfo> Items
+        public IdentifiableTable<BaseSlotItemInfo> Items
         {
             get { return this._items; }
             private set
@@ -125,20 +125,38 @@ namespace RemodelHelper.Models
             {
                 this.IsReady = false;
 
-                var newItems = new IdentifiableTable<BaseSlotInfo>();
+                var newItems = new IdentifiableTable<BaseSlotItemInfo>();
 
                 foreach (var item in this.RawData.Items.Where(item => item.GetBaseSlotInfo() != null))
                 {
                     if (!newItems.ContainsKey(item.SlotId))
-                        newItems.Add(new BaseSlotInfo(item));
+                        newItems.Add(new BaseSlotItemInfo(item));
                     else
-                        newItems[item.SlotId].AddUpgradeSlot(item);
+                        newItems[item.SlotId].AddUpgradeSlotItem(item);
                 }
 
                 foreach (var item in newItems.Values)
-                    foreach (var newSlot in item.UpgradeSlots.Values)
-                        newSlot.Level =
-                            this.RawData.NewSlots.FirstOrDefault(s => s.Id == item.Id && s.NewId == newSlot.Id)?.Lv ?? 0;
+                    foreach (var newItem in item.UpgradeSlotItems.Values)
+                    {
+                        var rawData = this.RawData.NewSlots.First(s => s.Id == item.Id && s.NewId == newItem.Id);
+                        newItem.Level = rawData.Lv;
+
+                        newItem.Fuel = rawData.Meterials[0];
+                        newItem.Ammo = rawData.Meterials[1];
+                        newItem.Steel = rawData.Meterials[2];
+                        newItem.Bauxite = rawData.Meterials[3];
+
+                        newItem.Consumptions = rawData.Consumption
+                            .Select(c => new ConsumptionInfo
+                            {
+                                Level = c.Lv,
+                                BuildKit = new KitCount { Normal = c.BKit[0], Ensure = c.BKit[1] },
+                                RemodelKit = new KitCount { Normal = c.RKit[0], Ensure = c.RKit[1] },
+                                ConsumeSlotItem = KanColleClient.Current.Master.SlotItems[c.CId],
+                                ConsumeCount = c.Count,
+                            })
+                            .ToArray();
+                    }
 
                 this.Items = newItems;
 
