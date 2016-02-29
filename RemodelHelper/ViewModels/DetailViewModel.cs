@@ -294,19 +294,20 @@ namespace RemodelHelper.ViewModels
 
             if (this.IsOnlyShowAvailable)
             {
-                // 不需要二号舰
-                if (assistant.ShipInfo == null) return true;
-
-                // 检查是否拥有舰娘
-                var shipId = assistant.ShipInfo.Id;
-                var client = KanColleClient.Current;
-                while (client.Homeport.Organization.Ships.Values.All(ship => ship.Info.Id != shipId))
+                // 需要二号舰
+                if (assistant.ShipInfo != null)
                 {
-                    int.TryParse(client.Master.Ships[shipId].RawData.api_aftershipid, out shipId);
-                    if (shipId == 0) return false;
+                    // 检查是否拥有舰娘
+                    var shipId = assistant.ShipInfo.Id;
+                    var client = KanColleClient.Current;
+                    var set = new HashSet<int>();
+                    while (client.Homeport.Organization.Ships.Values.All(ship => ship.Info.Id != shipId))
+                    {
+                        int.TryParse(client.Master.Ships[shipId].RawData.api_aftershipid, out shipId);
+                        // 没有后续改造舰娘 or 循环（如霞改二/乙）
+                        if (shipId == 0 || set.Add(shipId)) return false;
+                    }
                 }
-
-                return true;
             }
 
             return base.FilterAssistant(baseSlotItem, upgradeSlotItem, assistant);
