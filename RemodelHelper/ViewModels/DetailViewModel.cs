@@ -158,17 +158,13 @@ namespace RemodelHelper.ViewModels
         {
             this.Width = 1050;
 
+            this.UpdateAction += this.UpdateSlotTypes;
+
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
             this._dayTrigger = DateChangeTrigger.GetTigger(timeZone);
             this._dayTrigger.DateChanged += (before, after) => this.CurrentDay = after.DayOfWeek;
 
-            this.CurrentDay = this._dayTrigger.Today.DayOfWeek;
-
-            DataProvider
-                .Subscribe(nameof(DataProvider.Items), this.Update, false)
-                .AddTo(this);
-
-            this.UpdateAction += this.UpdateSlotTypes;
+            this._currentDay = this._dayTrigger.Today.DayOfWeek;
 
             this.Update();
         }
@@ -247,22 +243,10 @@ namespace RemodelHelper.ViewModels
                 }
 
                 // 不同等级阶段的开发资材/改修资材/装备消耗
-                var canRemodel = false;
-                if (baseItems.Any(s => s.Level >= 0 && s.Level < 6))
-                {
-                    var info = upgradeSlotItem.Consumptions[0];
-                    canRemodel |= this.Check(info);
-                }
-                if (baseItems.Any(s => s.Level >= 6 && s.Level < 10))
-                {
-                    var info = upgradeSlotItem.Consumptions[1];
-                    canRemodel |= this.Check(info);
-                }
-                if (baseItems.Any(s => s.Level == 10))
-                {
-                    var info = upgradeSlotItem.Consumptions[2];
-                    canRemodel |= this.Check(info);
-                }
+                var lvs = new[] { 0, 6, 10, int.MaxValue };
+                var canRemodel = upgradeSlotItem.Consumptions
+                    .Where((t, i) => baseItems.Any(s => s.Level >= lvs[i] && s.Level < lvs[i + 1]))
+                    .Aggregate(false, (c, v) => c | this.Check(v));
 
                 if (!canRemodel)
                 {

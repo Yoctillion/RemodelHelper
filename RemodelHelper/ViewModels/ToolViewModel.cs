@@ -46,24 +46,15 @@ namespace RemodelHelper.ViewModels
 
         public ToolViewModel()
         {
+            DataProvider
+                .Subscribe(nameof(RemodelDataProvider.IsUpdating), () => this.IsReady = !DataProvider.IsUpdating)
+                .AddTo(this);
+
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
             var dayTrigger = DateChangeTrigger.GetTigger(timeZone);
             dayTrigger.DateChanged += (before, after) => this.CurrentDay = after.DayOfWeek;
 
-            this.CurrentDay = dayTrigger.Today.DayOfWeek;
-
-            DataProvider
-                .Subscribe(nameof(RemodelDataProvider.Items), this.Update, false)
-                .AddTo(this);
-
-            DataProvider
-                .Subscribe(nameof(RemodelDataProvider.IsUpdating), () => this.IsReady = !DataProvider.IsUpdating)
-                .AddTo(this);
-        }
-
-        protected override IEnumerable<BaseSlotItemViewModel> GetUpdateSlotItemInfo()
-        {
-            return base.GetUpdateSlotItemInfo().Where(item => item.IsAvailable(this.CurrentDay));
+            this._currentDay = dayTrigger.Today.DayOfWeek;
         }
 
         protected override bool FilterBaseSlotItem(BaseSlotItemInfo baseSlotItem)
