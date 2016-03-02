@@ -80,6 +80,9 @@ namespace RemodelHelper.ViewModels
 
         public void UpdateData()
         {
+#if DEBUG
+            DataProvider.Load();
+#endif
             DataProvider.UpdateFromInternet();
         }
     }
