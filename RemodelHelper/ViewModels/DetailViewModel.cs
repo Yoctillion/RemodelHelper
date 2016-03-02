@@ -287,9 +287,12 @@ namespace RemodelHelper.ViewModels
                     var set = new HashSet<int>();
                     while (client.Homeport.Organization.Ships.Values.All(ship => ship.Info.Id != shipId))
                     {
+                        // 改造链循环（如霞改二/乙）
+                        if (!set.Add(shipId)) return false;
+
                         int.TryParse(client.Master.Ships[shipId].RawData.api_aftershipid, out shipId);
-                        // 没有后续改造舰娘 or 循环（如霞改二/乙）
-                        if (shipId == 0 || set.Add(shipId)) return false;
+                        // 没有后续改造舰娘
+                        if (shipId == 0) return false;
                     }
                 }
             }
