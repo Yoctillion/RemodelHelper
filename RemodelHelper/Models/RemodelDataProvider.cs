@@ -208,7 +208,7 @@ namespace RemodelHelper.Models
                         {
                             var check = this._serializer.ReadObject(stream) as RemodelData;
 
-                            if (string.CompareOrdinal(this.RawData.Version, check?.Version) < 0)
+                            if (string.CompareOrdinal(this.RawData?.Version, check?.Version) < 0)
                             {
                                 this.RawData = check;
 #if DEBUG
