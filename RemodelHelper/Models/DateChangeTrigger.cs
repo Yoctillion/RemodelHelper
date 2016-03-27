@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Threading;
+using Grabacr07.KanColleWrapper;
 
 namespace RemodelHelper.Models
 {
-    public class DateChangeTrigger : IDisposable
+    public class DateChangeTrigger : Notifier
     {
         private readonly DispatcherTimer _timer;
 
@@ -14,26 +15,43 @@ namespace RemodelHelper.Models
 
         private DateTime _currentDay;
 
-        public DateTime Today => TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.TimeZone).Date;
+        public DateTime Today
+        {
+            get { return this._currentDay; }
+            private set
+            {
+                if (this._currentDay != value)
+                {
+                    this._currentDay = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
 
 
         private DateChangeTrigger(TimeZoneInfo info)
         {
             this.TimeZone = info;
-            this._currentDay = this.Today;
+            this.Today = this.GetToday();
 
             this._timer = new DispatcherTimer { Interval = this.GetSleepTime() };
             this._timer.Tick += (x, y) =>
             {
                 this._timer.Interval = this.GetSleepTime();
 
-                this.DateChanged?.Invoke(this._currentDay, this.Today);
-                this._currentDay = this.Today;
+                var today = this.GetToday();
+                this.DateChanged?.Invoke(this._currentDay, today);
+                this.Today = today;
             };
             this._timer.Start();
         }
 
-        private TimeSpan GetSleepTime() => this.Today.AddDays(1) - DateTime.Now;
+        private DateTime GetToday()
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.TimeZone).Date;
+        }
+
+        private TimeSpan GetSleepTime() => this.GetToday().AddDays(1) - DateTime.Now;
 
         public void Dispose()
         {

@@ -162,7 +162,9 @@ namespace RemodelHelper.ViewModels
 
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
             this._dayTrigger = DateChangeTrigger.GetTigger(timeZone);
-            this._dayTrigger.DateChanged += (before, after) => this.CurrentDay = after.DayOfWeek;
+            this._dayTrigger
+                .Subscribe(nameof(DateChangeTrigger.Today), () => this.CurrentDay = this._dayTrigger.Today.DayOfWeek, false)
+                .AddTo(this);
 
             this._currentDay = this._dayTrigger.Today.DayOfWeek;
 
