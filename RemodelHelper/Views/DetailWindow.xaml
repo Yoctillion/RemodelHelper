@@ -14,7 +14,7 @@
                    Foreground="{DynamicResource ActiveForegroundBrushKey}"
                    FontFamily="{DynamicResource DefaultFontFamilyKey}"
                    Title="改修情报一览"
-                   Width="1100"
+                   Width="1150"
                    Height="800"
                    FontSize="12"
                    IsRestoringWindowPlacement="True"
@@ -228,7 +228,7 @@
                             <GridViewColumn Width="{Binding Width, Mode=TwoWay}">
                                 <GridViewColumn.Header>
                                     <DockPanel>
-                                        <Border Width="200"
+                                        <Border Width="220"
                                                 BorderThickness="0,0,1,0"
                                                 BorderBrush="{DynamicResource BorderBrushKey}">
                                             <TextBlock Text="装备名" />
@@ -338,7 +338,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
                                         <DockPanel>
-                                            <DockPanel Width="196"
+                                            <DockPanel Width="216"
                                                        VerticalAlignment="Center">
                                                 <Border Padding="0,1,5,1">
                                                     <Viewbox Width="20">

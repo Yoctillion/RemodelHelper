@@ -156,7 +156,7 @@ namespace RemodelHelper.ViewModels
 
         public DetailViewModel()
         {
-            this.Width = 1050;
+            this.Width = 1100;
 
             this.UpdateAction += this.UpdateSlotTypes;
 
