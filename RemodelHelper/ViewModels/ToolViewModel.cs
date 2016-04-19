@@ -5,11 +5,44 @@ using Livet;
 using Livet.Messaging;
 using MetroTrilithon.Mvvm;
 using RemodelHelper.Models;
+using RemodelHelper.Properties;
 
 namespace RemodelHelper.ViewModels
 {
     public class ToolViewModel : ItemsViewModel
     {
+        private readonly Settings _settings = Settings.Default;
+
+        public int BaseInfoWidth
+        {
+            get { return this._settings.OverviewBaseInfoWidth; }
+            set
+            {
+                value = Math.Max(0, value);
+                if (this._settings.OverviewBaseInfoWidth != value)
+                {
+                    this._settings.OverviewBaseInfoWidth = value;
+                    SettingsHelper.Default.SaveWithDelay();
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        public int UpgradeInfoWidth
+        {
+            get { return this._settings.OverviewUpgradeInfoWidth; }
+            set
+            {
+                value = Math.Max(0, value);
+                if (this._settings.OverviewUpgradeInfoWidth != value)
+                {
+                    this._settings.OverviewUpgradeInfoWidth = value;
+                    SettingsHelper.Default.SaveWithDelay();
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
         public string[] DaysOfWeek { get; } =
             { "周日（日）", "周一（月）", "周二（水）", "周三（火）", "周四（木）", "周五（金）", "周六（土）" };
 

@@ -41,4 +41,11 @@
     </ResourceDictionary.MergedDictionaries>
 
     <converters:DayOfWeekAndIntConverter x:Key="DayOfWeekAndIntConverter" />
+
+    <Style x:Key="CenterVerticalAlignmentItemContainerStyleKey"
+           TargetType="{x:Type ListViewItem}"
+           BasedOn="{StaticResource GridViewItemContainerStyleKey}">
+        <Setter Property="VerticalContentAlignment"
+                Value="Center"/>
+    </Style>
 </ResourceDictionary>

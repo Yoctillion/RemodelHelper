@@ -175,7 +175,7 @@
                     BorderThickness="1"
                     Margin="0,8,0,0">
                 <ListView ItemsSource="{Binding BaseSlotItems}"
-                          ItemContainerStyle="{DynamicResource GridViewItemContainerStyleKey}"
+                          ItemContainerStyle="{DynamicResource CenterVerticalAlignmentItemContainerStyleKey}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
                           ScrollViewer.PanningMode="Both">
@@ -225,14 +225,31 @@
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="{Binding Width, Mode=TwoWay}">
+                            <GridViewColumn Width="{Binding BaseInfoWidth, Mode=TwoWay}">
+                                <GridViewColumn.Header>
+                                    <Border BorderThickness="0,0,1,0"
+                                            BorderBrush="{DynamicResource BorderBrushKey}">
+                                        <TextBlock Text="装备名" />
+                                    </Border>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
+                                        <DockPanel>
+                                            <Border Padding="0,1,5,1">
+                                                <Viewbox Width="20">
+                                                    <kcvc:SlotItemIcon Type="{Binding Info.IconType}" />
+                                                </Viewbox>
+                                            </Border>
+                                            <TextBlock Text="{Binding Info.Name, Mode=OneWay}"
+                                                       Foreground="{DynamicResource ActiveForegroundBrushKey}"
+                                                       Margin="0,4" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding UpgradeInfoWidth, Mode=TwoWay}">
                                 <GridViewColumn.Header>
                                     <DockPanel>
-                                        <Border Width="220"
-                                                BorderThickness="0,0,1,0"
-                                                BorderBrush="{DynamicResource BorderBrushKey}">
-                                            <TextBlock Text="装备名" />
-                                        </Border>
                                         <DockPanel Visibility="{Binding ConsumptionVisibility}">
                                             <Border BorderThickness="0,0,1,1"
                                                     BorderBrush="{DynamicResource BorderBrushKey}"
@@ -338,19 +355,8 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
                                         <DockPanel>
-                                            <DockPanel Width="216"
-                                                       VerticalAlignment="Center">
-                                                <Border Padding="0,1,5,1">
-                                                    <Viewbox Width="20">
-                                                        <kcvc:SlotItemIcon Type="{Binding Info.IconType}" />
-                                                    </Viewbox>
-                                                </Border>
-                                                <TextBlock Text="{Binding Info.Name, Mode=OneWay}"
-                                                           Foreground="{DynamicResource ActiveForegroundBrushKey}"
-                                                           Margin="0,4" />
-                                            </DockPanel>
                                             <ItemsControl ItemsSource="{Binding UpgradeSlotItems}"
-                                                          Margin="0,0,0,-1">
+                                                          Margin="-4,0,0,-1">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <Border BorderThickness="0,0,0,1"

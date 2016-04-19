@@ -59,18 +59,5 @@ namespace RemodelHelper.Controls
         public static readonly DependencyProperty CellBorderBrushProperty =
             DependencyProperty.Register(nameof(CellBorderBrush), typeof(Brush), typeof(WeekPresenter));
 
-        public DayOfWeek[] Weekdays
-        {
-            get { return (DayOfWeek[])this.GetValue(WeekdaysProperty); }
-            private set { this.SetValue(WeekdaysProperty, value); }
-        }
-
-        public static DependencyProperty WeekdaysProperty =
-            DependencyProperty.Register(nameof(Weekdays), typeof(DayOfWeek[]), typeof(WeekPresenter));
-
-        public WeekPresenter()
-        {
-            this.Weekdays = new[] { DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, };
-        }
     }
 }

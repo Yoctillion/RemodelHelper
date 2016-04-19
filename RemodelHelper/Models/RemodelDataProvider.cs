@@ -94,14 +94,6 @@ namespace RemodelHelper.Models
 
         #endregion
 
-
-        private string DataPath { get; } =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "grabacr.net",
-                "KanColleViewer",
-                "RemodelData.json");
-
-
         private RemodelDataProvider()
         {
 #if DEBUG
@@ -172,6 +164,12 @@ namespace RemodelHelper.Models
         private readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(RemodelData));
 
 #if DEBUG
+        public string DataPath { get; } =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "grabacr.net",
+                "KanColleViewer",
+                "RemodelData.json");
+
         public void Save()
         {
             using (var stream = Stream.Synchronized(new FileStream(this.DataPath, FileMode.Create, FileAccess.Write)))

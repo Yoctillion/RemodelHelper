@@ -170,6 +170,7 @@
     <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\Week.cs" />
     <Compile Include="Plugin.cs" />
+    <Compile Include="SettingsHelper.cs" />
     <Compile Include="ViewModels\AssistantGroupViewModel.cs" />
     <Compile Include="ViewModels\ConsumptionViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />

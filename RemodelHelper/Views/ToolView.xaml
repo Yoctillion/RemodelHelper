@@ -114,7 +114,7 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="200">
+                        <GridViewColumn Width="{Binding BaseInfoWidth, Mode=TwoWay}">
                             <GridViewColumn.Header>
                                 <TextBlock Text="装备名" />
                             </GridViewColumn.Header>
@@ -133,7 +133,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Width="355">
+                        <GridViewColumn Width="{Binding UpgradeInfoWidth, Mode=TwoWay}">
                             <GridViewColumn.Header>
                                 <DockPanel>
                                     <Border Width="145"

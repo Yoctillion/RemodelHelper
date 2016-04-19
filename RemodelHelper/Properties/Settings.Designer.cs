@@ -22,5 +22,89 @@ namespace RemodelHelper.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public int OverviewBaseInfoWidth {
+            get {
+                return ((int)(this["OverviewBaseInfoWidth"]));
+            }
+            set {
+                this["OverviewBaseInfoWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("360")]
+        public int OverviewUpgradeInfoWidth {
+            get {
+                return ((int)(this["OverviewUpgradeInfoWidth"]));
+            }
+            set {
+                this["OverviewUpgradeInfoWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public int DetailBaseInfoWidth {
+            get {
+                return ((int)(this["DetailBaseInfoWidth"]));
+            }
+            set {
+                this["DetailBaseInfoWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("880")]
+        public int DetailUpgradeInfoWidth {
+            get {
+                return ((int)(this["DetailUpgradeInfoWidth"]));
+            }
+            set {
+                this["DetailUpgradeInfoWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DetailOnlyShowCurrentDay {
+            get {
+                return ((bool)(this["DetailOnlyShowCurrentDay"]));
+            }
+            set {
+                this["DetailOnlyShowCurrentDay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DetailHideConsumption {
+            get {
+                return ((bool)(this["DetailHideConsumption"]));
+            }
+            set {
+                this["DetailHideConsumption"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DetailOnlyShowAvailable {
+            get {
+                return ((bool)(this["DetailOnlyShowAvailable"]));
+            }
+            set {
+                this["DetailOnlyShowAvailable"] = value;
+            }
+        }
     }
 }

@@ -6,24 +6,42 @@ using System.Windows;
 using Grabacr07.KanColleWrapper;
 using MetroTrilithon.Mvvm;
 using RemodelHelper.Models;
+using RemodelHelper.Properties;
 
 namespace RemodelHelper.ViewModels
 {
     public class DetailViewModel : ItemsViewModel
     {
+        private readonly Settings _settings = Settings.Default;
+
         public string[] DaysOfWeek { get; } =
             {"周日（日）", "周一（月）", "周二（水）", "周三（火）", "周四（木）", "周五（金）", "周六（土）"};
 
-        private int _width;
-
-        public int Width
+        public int BaseInfoWidth
         {
-            get { return this._width; }
+            get { return this._settings.DetailBaseInfoWidth; }
             set
             {
-                if (this._width != value)
+                value = Math.Max(0, value);
+                if (this._settings.DetailBaseInfoWidth != value)
                 {
-                    this._width = value;
+                    this._settings.DetailBaseInfoWidth = value;
+                    SettingsHelper.Default.SaveWithDelay();
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
+        public int UpgradeInfoWidth
+        {
+            get { return this._settings.DetailUpgradeInfoWidth; }
+            set
+            {
+                value = Math.Max(0, value);
+                if (this._settings.DetailUpgradeInfoWidth != value)
+                {
+                    this._settings.DetailUpgradeInfoWidth = value;
+                    SettingsHelper.Default.SaveWithDelay();
                     this.RaisePropertyChanged();
                 }
             }
@@ -90,48 +108,55 @@ namespace RemodelHelper.ViewModels
 
         public bool IsOnlyShowAvailable
         {
-            get { return this._isOnlyShowAvailable; }
+            get { return this._settings.DetailOnlyShowAvailable; }
             set
             {
-                if (this._isOnlyShowAvailable != value)
+                if (this._settings.DetailOnlyShowAvailable != value)
                 {
-                    this._isOnlyShowAvailable = value;
+                    this._settings.DetailOnlyShowAvailable = value;
+                    this._settings.Save();
                     this.RaisePropertyChanged();
                     this.UpdateSlotInfo();
                 }
             }
         }
-
-        private bool _isOnlyShowCurrentDay;
 
         public bool IsOnlyShowCurrentDay
         {
-            get { return this._isOnlyShowCurrentDay; }
+            get { return this._settings.DetailOnlyShowCurrentDay; }
             set
             {
-                if (this._isOnlyShowCurrentDay != value)
+                if (this._settings.DetailOnlyShowCurrentDay != value)
                 {
-                    this._isOnlyShowCurrentDay = value;
+                    this._settings.DetailOnlyShowCurrentDay = value;
+                    this._settings.Save();
                     this.RaisePropertyChanged();
                     this.UpdateSlotInfo();
                 }
             }
         }
 
-
-        private bool _isHideConsumption;
-
         public bool IsHideConsumption
         {
-            get { return this._isHideConsumption; }
+            get { return this._settings.DetailHideConsumption; }
             set
             {
-                if (this._isHideConsumption != value)
+                if (this._settings.DetailHideConsumption != value)
                 {
-                    this._isHideConsumption = value;
+                    this._settings.DetailHideConsumption = value;
+                    this._settings.Save();
                     this.RaisePropertyChanged();
-                    this.ConsumptionVisibility = value ? Visibility.Collapsed : Visibility.Visible;
-                    this.Width = value ? 750 : 1050;
+
+                    if (value)
+                    {
+                        this.ConsumptionVisibility = Visibility.Collapsed;
+                        this.UpgradeInfoWidth -= 300;
+                    }
+                    else
+                    {
+                        this.ConsumptionVisibility = Visibility.Visible;
+                        this.UpgradeInfoWidth += 300;
+                    }
                 }
             }
         }
@@ -156,8 +181,6 @@ namespace RemodelHelper.ViewModels
 
         public DetailViewModel()
         {
-            this.Width = 1100;
-
             this.UpdateAction += this.UpdateSlotTypes;
 
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
