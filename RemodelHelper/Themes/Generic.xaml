@@ -4,6 +4,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.WeekPresenter.xaml" />
         <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.DayOfWeekPresenter.xaml" />
+        <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.DayOfWeekSelect.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

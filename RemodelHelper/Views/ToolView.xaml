@@ -10,6 +10,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:messaging="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:views="clr-namespace:RemodelHelper.Views"
+             xmlns:controls1="clr-namespace:RemodelHelper.Controls"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d"
@@ -40,10 +41,8 @@
                        VerticalAlignment="Center"
                        Margin="2" />
 
-            <metro:PromptComboBox ItemsSource="{Binding DaysOfWeek}"
-                                  SelectedIndex="{Binding CurrentDay, Converter={StaticResource DayOfWeekAndIntConverter}, Mode=TwoWay}"
-                                  VerticalAlignment="Center"
-                                  Margin="2" />
+            <controls1:DayOfWeekSelect CurrentDayOfWeek="{Binding CurrentDay, Mode=TwoWay}"
+                                       Margin="0,2,14,2"/>
 
             <metro2:CallMethodButton DockPanel.Dock="Right"
                                      Content="详细"

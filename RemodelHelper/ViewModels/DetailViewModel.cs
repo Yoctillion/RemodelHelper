@@ -14,9 +14,6 @@ namespace RemodelHelper.ViewModels
     {
         private readonly Settings _settings = Settings.Default;
 
-        public string[] DaysOfWeek { get; } =
-            {"周日（日）", "周一（月）", "周二（水）", "周三（火）", "周四（木）", "周五（金）", "周六（土）"};
-
         public int BaseInfoWidth
         {
             get { return this._settings.DetailBaseInfoWidth; }

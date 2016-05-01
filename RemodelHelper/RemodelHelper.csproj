@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\DayOfWeekPresenter.cs" />
+    <Compile Include="Controls\DayOfWeekSelect.cs" />
     <Compile Include="Controls\WeekPresenter.cs" />
     <Compile Include="Converters\DayOfWeekAndIntConverter.cs" />
     <Compile Include="IdentifiableTable.cs" />
@@ -216,6 +217,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.DayOfWeekPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>Generic.xaml</DependentUpon>
+    </Page>
+    <Page Include="Themes\Generic.DayOfWeekSelect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <DependentUpon>Generic.xaml</DependentUpon>

@@ -129,9 +129,8 @@
                                        VerticalAlignment="Center" />
                             <WrapPanel Grid.Row="0"
                                        Grid.Column="2">
-                                <metro:PromptComboBox ItemsSource="{Binding DaysOfWeek}"
-                                                      SelectedIndex="{Binding CurrentDay, Converter={StaticResource DayOfWeekAndIntConverter}, Mode=TwoWay}"
-                                                      Margin="0,2,14,2" />
+                                <controls:DayOfWeekSelect CurrentDayOfWeek="{Binding CurrentDay, Mode=TwoWay}"
+                                                          Margin="0,2,14,2"/>
 
                                 <metro2:CallMethodButton Content="返回今天"
                                                          MethodName="BackToToday"
