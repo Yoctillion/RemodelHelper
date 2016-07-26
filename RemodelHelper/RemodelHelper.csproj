@@ -164,6 +164,7 @@
     <Compile Include="Models\ConsumptionInfo.cs" />
     <Compile Include="Models\DateChangeTrigger.cs" />
     <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\UnsureValue.cs" />
     <Compile Include="Models\UpgradeData.cs" />
     <Compile Include="Models\RemodelData.cs" />
     <Compile Include="Models\RemodelDataProvider.cs" />

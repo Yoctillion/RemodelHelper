@@ -101,8 +101,6 @@ namespace RemodelHelper.ViewModels
             }
         }
 
-        private bool _isOnlyShowAvailable;
-
         public bool IsOnlyShowAvailable
         {
             get { return this._settings.DetailOnlyShowAvailable; }
@@ -268,7 +266,7 @@ namespace RemodelHelper.ViewModels
                 var lvs = new[] { 0, 6, 10, int.MaxValue };
                 var canRemodel = upgradeSlotItem.Consumptions
                     .Where((t, i) => baseItems.Any(s => s.Level >= lvs[i] && s.Level < lvs[i + 1]))
-                    .Aggregate(false, (c, v) => c | this.Check(v));
+                    .Aggregate(false, (c, v) => c | this.CheckConsumption(v));
 
                 if (!canRemodel)
                 {
@@ -279,14 +277,19 @@ namespace RemodelHelper.ViewModels
             return base.FilterUpgradeSlotItem(baseSlotItem, upgradeSlotItem);
         }
 
-        private bool Check(ConsumptionInfo info)
+        private bool CheckConsumption(ConsumptionInfo info)
         {
             var materials = KanColleClient.Current.Homeport.Materials;
             var slotItems = KanColleClient.Current.Homeport.Itemyard.SlotItems;
 
-            return materials.DevelopmentMaterials >= info.BuildKit.Normal &&
-                   materials.ImprovementMaterials >= info.RemodelKit.Normal &&
-                   slotItems.Values.Count(s => s.Info == info.ConsumeSlotItem && s.Level == 0 && s.RawData.api_locked == 0) >= info.ConsumeCount;
+            return this.CheckCount(info.BuildKit.Normal, materials.DevelopmentMaterials) &&
+                   this.CheckCount(info.RemodelKit.Normal, materials.ImprovementMaterials) &&
+                   this.CheckCount(info.ConsumeCount, slotItems.Values.Count(s => s.Info == info.ConsumeSlotItem && s.Level == 0 && s.RawData.api_locked == 0));
+        }
+
+        private bool CheckCount(UnsureValue value, int num)
+        {
+            return (value.IsSure || value.Value >= 0) && num > value.Value;
         }
 
         protected override bool FilterAssistant(BaseSlotItemInfo baseSlotItem, UpgradeSlotItemInfo upgradeSlotItem,

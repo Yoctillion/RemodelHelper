@@ -69,7 +69,6 @@ namespace RemodelHelper.ViewModels
                             Steel = upgradeItem.Steel,
                             Bauxite = upgradeItem.Bauxite,
                             Consumptions = upgradeItem.Consumptions
-                                .Where(c => c.ConsumeCount >= 0)
                                 .Select(c => new ConsumptionViewModel
                                 {
                                     Info = c,

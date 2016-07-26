@@ -423,8 +423,15 @@
                                                                                                         Value="{DynamicResource ForegroundBrushKey}" />
                                                                                                     <Style.Triggers>
                                                                                                         <DataTrigger
-                                                                                                            Binding="{Binding Info.ConsumeCount}"
+                                                                                                            Binding="{Binding Info.ConsumeCount.Value}"
                                                                                                             Value="0">
+                                                                                                            <Setter
+                                                                                                                Property="IsEnabled"
+                                                                                                                Value="False" />
+                                                                                                        </DataTrigger>
+                                                                                                        <DataTrigger
+                                                                                                            Binding="{Binding Info.ConsumeCount.Value}"
+                                                                                                            Value="-1">
                                                                                                             <Setter
                                                                                                                 Property="IsEnabled"
                                                                                                                 Value="False" />
