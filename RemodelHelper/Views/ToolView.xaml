@@ -113,24 +113,11 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="{Binding BaseInfoWidth, Mode=TwoWay}">
+                        <GridViewColumn Width="{Binding BaseInfoWidth, Mode=TwoWay}"
+                                        CellTemplate="{StaticResource SlotItemInfoTemplate}">
                             <GridViewColumn.Header>
                                 <TextBlock Text="装备名" />
                             </GridViewColumn.Header>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate DataType="{x:Type vm:BaseSlotItemViewModel}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Border Padding="0,1,5,1">
-                                            <Viewbox Width="20">
-                                                <controls:SlotItemIcon Type="{Binding Info.IconType}" />
-                                            </Viewbox>
-                                        </Border>
-                                        <TextBlock Text="{Binding Info.Name, Mode=OneWay}"
-                                                   Foreground="{DynamicResource ActiveForegroundBrushKey}"
-                                                   Margin="0,4" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Width="{Binding UpgradeInfoWidth, Mode=TwoWay}">
                             <GridViewColumn.Header>
@@ -170,49 +157,8 @@
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
-                                                        <Border Padding="0,1,5,1">
-                                                            <Viewbox Width="20"
-                                                                     VerticalAlignment="Top">
-                                                                <controls:SlotItemIcon Type="{Binding Info.IconType}" />
-                                                                <Viewbox.Style>
-                                                                    <Style TargetType="{x:Type Viewbox}">
-                                                                        <Setter Property="Visibility"
-                                                                                Value="Visible" />
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Name}"
-                                                                                         Value="更新不可">
-                                                                                <Setter Property="Visibility"
-                                                                                        Value="Hidden" />
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </Viewbox.Style>
-                                                            </Viewbox>
-                                                        </Border>
-                                                        <TextBlock Text="{Binding Name, Mode=OneWay}"
-                                                                   Foreground="{DynamicResource ActiveForegroundBrushKey}"
-                                                                   Margin="0,4" />
-                                                        <TextBlock Margin="0,4">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="{x:Type TextBlock}">
-                                                                    <Setter Property="Text"
-                                                                            Value="{Binding Level, StringFormat=★+{0}}" />
-                                                                    <Setter Property="Foreground"
-                                                                            Value="#FF45A9A5" />
-                                                                    <Setter Property="Opacity"
-                                                                            Value="1.0" />
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Level}"
-                                                                                     Value="0">
-                                                                            <Setter Property="Foreground"
-                                                                                    Value="{DynamicResource InactiveForegroundBrushKey}" />
-                                                                            <Setter Property="Visibility"
-                                                                                    Value="Collapsed" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
+                                                        <ContentControl ContentTemplate="{StaticResource SlotItemInfoTemplate}"
+                                                                        Content="{Binding}" />
                                                     </DockPanel>
                                                 </Border>
                                             </DataTemplate>

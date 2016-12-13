@@ -287,9 +287,9 @@ namespace RemodelHelper.ViewModels
                    this.CheckCount(info.ConsumeCount, slotItems.Values.Count(s => s.Info == info.ConsumeSlotItem && s.Level == 0 && s.RawData.api_locked == 0));
         }
 
-        private bool CheckCount(UnsureValue value, int num)
+        private bool CheckCount(UnsureValue value, int count)
         {
-            return (value.IsSure || value.Value >= 0) && num > value.Value;
+            return value.Value >= 0 && count >= value.Value;
         }
 
         protected override bool FilterAssistant(BaseSlotItemInfo baseSlotItem, UpgradeSlotItemInfo upgradeSlotItem,

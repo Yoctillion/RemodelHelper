@@ -1,0 +1,66 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:RemodelHelper.Controls"
+                    xmlns:viewModels="clr-namespace:RemodelHelper.ViewModels"
+                    xmlns:controls1="http://schemes.grabacr.net/winfx/2015/kancolleviewer/controls">
+
+    <DataTemplate x:Key="SlotItemInfoTemplate"
+                  DataType="viewModels:SlotItemViewModel">
+        <DockPanel IsEnabled="{Binding HasValue}">
+            <DockPanel.ToolTip>
+                <StackPanel Grid.IsSharedSizeScope="True">
+                    <controls:SlotItemProperty PropertyName="火力" Value="{Binding Info.Firepower}" OldValue="{Binding Base.Firepower}" />
+                    <controls:SlotItemProperty PropertyName="雷装" Value="{Binding Info.Torpedo}" OldValue="{Binding Base.Torpedo}" />
+                    <controls:SlotItemProperty PropertyName="爆装" Value="{Binding Info.Bomb}" OldValue="{Binding Base.Bomb}" />
+                    <controls:SlotItemProperty PropertyName="对空" Value="{Binding Info.AA}" OldValue="{Binding Base.AA}" />
+                    <controls:SlotItemProperty PropertyName="装甲" Value="{Binding Info.Armer}" OldValue="{Binding Base.Armer}" />
+                    <controls:SlotItemProperty PropertyName="対潜" Value="{Binding Info.ASW}" OldValue="{Binding Base.ASW}" />
+                    <controls:SlotItemProperty PropertyName="索敵" Value="{Binding Info.ViewRange}" OldValue="{Binding Base.ViewRange}" />
+                    <controls:SlotItemProperty PropertyName="命中" Value="{Binding Info.Hit}" OldValue="{Binding Base.Hit}" />
+                    <controls:SlotItemProperty PropertyName="回避" Value="{Binding Info.Evade}" OldValue="{Binding Base.Evade}" />
+                </StackPanel>
+            </DockPanel.ToolTip>
+            <Border Padding="0,1,5,1">
+                <Viewbox Width="20"
+                         VerticalAlignment="Top">
+                    <controls1:SlotItemIcon Type="{Binding Info.IconType}" />
+                    <Viewbox.Style>
+                        <Style TargetType="Viewbox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasValue}"
+                                             Value="False">
+                                    <Setter Property="Visibility"
+                                            Value="Hidden" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Viewbox.Style>
+                </Viewbox>
+            </Border>
+            <TextBlock Text="{Binding Name, Mode=OneWay}"
+                       Foreground="{DynamicResource ActiveForegroundBrushKey}"
+                       Margin="0,4" />
+            <TextBlock Margin="0,4">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Text"
+                                Value="{Binding Level, StringFormat=★+{0}}" />
+                        <Setter Property="Foreground"
+                                Value="#FF45A9A5" />
+                        <Setter Property="Opacity"
+                                Value="1.0" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Level}"
+                                         Value="0">
+                                <Setter Property="Foreground"
+                                        Value="{DynamicResource InactiveForegroundBrushKey}" />
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </DockPanel>
+    </DataTemplate>
+</ResourceDictionary>

@@ -62,6 +62,7 @@ namespace RemodelHelper.ViewModels
                         .Where(upgradeSlot => this.FilterUpgradeSlotItem(baseItem, upgradeSlot))
                         .Select(upgradeItem => new UpgradeSlotItemViewModel
                         {
+                            Base = baseItem.Info,
                             Info = upgradeItem.Info,
                             Level = upgradeItem.Level,
                             Fuel = upgradeItem.Fuel,

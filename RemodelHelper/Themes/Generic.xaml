@@ -5,7 +5,7 @@
         <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.WeekPresenter.xaml" />
         <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.DayOfWeekPresenter.xaml" />
         <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.DayOfWeekSelect.xaml" />
+        <ResourceDictionary Source="/RemodelHelper;component/Themes/Generic.SlotItemProperty.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
 </ResourceDictionary>
 

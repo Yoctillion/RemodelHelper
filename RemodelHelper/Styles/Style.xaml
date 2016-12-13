@@ -38,6 +38,8 @@
         <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.PinButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.TabControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/KanColleViewer.Controls;component/Styles/Controls.Text.xaml" />
+
+        <ResourceDictionary Source="Style.SlotItemInfo.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <converters:DayOfWeekAndIntConverter x:Key="DayOfWeekAndIntConverter" />

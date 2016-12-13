@@ -13,8 +13,15 @@ namespace RemodelHelper.ViewModels
 {
     public class SlotItemViewModel : ViewModel
     {
+        public SlotItemInfo Base { get; set; }
+
         public SlotItemInfo Info { get; set; }
 
+        public string Name => this.Info?.Name ?? "更新不可";
+
+        public bool HasValue => this.Info != null;
+
+        public int Level { get; set; }
     }
 
     public class BaseSlotItemViewModel : SlotItemViewModel
@@ -29,10 +36,6 @@ namespace RemodelHelper.ViewModels
 
     public class UpgradeSlotItemViewModel : SlotItemViewModel
     {
-        public string Name => this.Info?.Name ?? "更新不可";
-
-        public int Level { get; set; }
-
         public int Fuel { get; set; }
 
         public int Ammo { get; set; }
